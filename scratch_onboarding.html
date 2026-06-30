@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InsightWallet Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#1d1a24",
+                    "inverse-surface": "#e8dfee",
+                    "inverse-on-surface": "#332f39",
+                    "on-tertiary-fixed-variant": "#713700",
+                    "on-background": "#e8dfee",
+                    "tertiary-fixed": "#ffdcc6",
+                    "on-primary": "#3f008e",
+                    "secondary-container": "#571bc1",
+                    "surface-container-high": "#2c2833",
+                    "surface-container-highest": "#37333e",
+                    "on-secondary": "#3c0091",
+                    "outline-variant": "#4a4455",
+                    "on-tertiary-fixed": "#301400",
+                    "secondary-fixed": "#e9ddff",
+                    "on-surface-variant": "#ccc3d8",
+                    "primary-fixed": "#eaddff",
+                    "background": "#15121b",
+                    "on-surface": "#e8dfee",
+                    "on-tertiary": "#4f2500",
+                    "surface-variant": "#37333e",
+                    "on-tertiary-container": "#ffe0cd",
+                    "surface": "#15121b",
+                    "secondary": "#d0bcff",
+                    "tertiary-container": "#a15100",
+                    "on-primary-fixed-variant": "#5a00c6",
+                    "primary-container": "#7c3aed",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#5516be",
+                    "primary": "#d2bbff",
+                    "surface-tint": "#d2bbff",
+                    "surface-container": "#221e28",
+                    "on-secondary-fixed": "#23005c",
+                    "tertiary-fixed-dim": "#ffb784",
+                    "outline": "#958da1",
+                    "tertiary": "#ffb784",
+                    "on-primary-fixed": "#25005a",
+                    "surface-container-lowest": "#100d16",
+                    "error-container": "#93000a",
+                    "surface-bright": "#3c3742",
+                    "primary-fixed-dim": "#d2bbff",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#732ee4",
+                    "error": "#ffb4ab",
+                    "secondary-fixed-dim": "#d0bcff",
+                    "on-secondary-container": "#c4abff",
+                    "on-primary-container": "#ede0ff",
+                    "surface-dim": "#15121b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "container-max": "1280px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "gutter": "24px",
+                    "lg": "24px",
+                    "xxl": "48px",
+                    "md": "16px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Hanken Grotesk"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-sm": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "number-xl": ["Geist"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Geist"],
+                    "display-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "number-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-white overflow-hidden">
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary-container/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Onboarding Container -->
+<main class="relative z-10 flex flex-col h-screen max-w-lg mx-auto px-lg pt-xl pb-xxl">
+<!-- Header -->
+<header class="flex justify-between items-center w-full mb-xxl">
+<div class="flex items-center gap-2">
+<img alt="InsightWallet Logo" class="h-8 w-8 object-contain" src="data:image/png;base64,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"/>
+<span class="font-headline-sm text-headline-sm-mobile text-primary tracking-tight">InsightWallet</span>
+</div>
+<button class="text-on-surface-variant font-label-md text-label-md uppercase tracking-widest hover:text-primary transition-colors active:scale-95">
+                Skip
+            </button>
+</header>
+<!-- Illustration Area (Bento-inspired Layout) -->
+<section class="flex-grow flex flex-col justify-center items-center">
+<div class="relative w-full max-w-[320px] aspect-square mb-xl">
+<!-- Main Glass Card (Illustration Representation) -->
+<div class="absolute inset-0 glass-panel rounded-xxl flex items-center justify-center p-md animate-float overflow-hidden">
+<!-- Symbolic Expense Visualization -->
+<div class="relative w-full h-full flex flex-col gap-sm">
+<div class="w-full h-12 bg-primary/20 rounded-xl flex items-center px-md gap-sm">
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+<div class="h-2 w-24 bg-primary/30 rounded-full"></div>
+<div class="ml-auto font-number-xl text-body-sm text-primary">$42.00</div>
+</div>
+<div class="w-full h-12 bg-white/5 rounded-xl flex items-center px-md gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">restaurant</span>
+<div class="h-2 w-16 bg-white/10 rounded-full"></div>
+<div class="ml-auto font-number-xl text-body-sm text-on-surface-variant">$18.50</div>
+</div>
+<div class="w-full h-12 bg-secondary-container/20 rounded-xl flex items-center px-md gap-sm">
+<span class="material-symbols-outlined text-secondary">commute</span>
+<div class="h-2 w-20 bg-secondary/30 rounded-full"></div>
+<div class="ml-auto font-number-xl text-body-sm text-secondary">$12.00</div>
+</div>
+<!-- Floating Data Dots -->
+<div class="absolute top-2 right-4 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#d2bbff]"></div>
+</div>
+</div>
+<!-- Accompanying Small Glass Elements -->
+<div class="absolute -top-4 -right-4 w-16 h-16 glass-panel rounded-xl flex items-center justify-center shadow-xxl rotate-12">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div class="absolute -bottom-6 -left-2 w-20 h-20 glass-panel rounded-full flex items-center justify-center shadow-xxl -rotate-12 border-primary/20">
+<span class="material-symbols-outlined text-secondary text-headline-md">pie_chart</span>
+</div>
+</div>
+<!-- Content Area -->
+<div class="text-center px-md">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface mb-md">Track Your Wealth</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px] mx-auto opacity-80 leading-relaxed">
+                    Automatically categorize and monitor your spending with intelligent insights.
+                </p>
+</div>
+</section>
+<!-- Footer Actions -->
+<footer class="mt-auto space-y-xl">
+<!-- Progress Indicators -->
+<div class="flex justify-center items-center gap-2">
+<div class="h-1.5 w-6 rounded-full bg-primary transition-all duration-300"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-all cursor-pointer"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-all cursor-pointer"></div>
+</div>
+<!-- Main Button -->
+<div class="flex flex-col gap-md">
+<button class="glow-button w-full h-14 bg-primary-container text-on-primary-container font-headline-sm rounded-xl flex items-center justify-center gap-sm active:scale-95 transition-all duration-200">
+                    Next
+                    <span class="material-symbols-outlined text-on-primary-container">arrow_forward</span>
+</button>
+</div>
+</footer>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const button = document.querySelector('.glow-button');
+            
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                button.style.setProperty('--mouse-x', `${x}px`);
+                button.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body></html>

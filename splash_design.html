@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InsightWallet | Welcome</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-low": "#1d1a24",
+                "inverse-surface": "#e8dfee",
+                "inverse-on-surface": "#332f39",
+                "on-tertiary-fixed-variant": "#713700",
+                "on-background": "#e8dfee",
+                "tertiary-fixed": "#ffdcc6",
+                "on-primary": "#3f008e",
+                "secondary-container": "#571bc1",
+                "surface-container-high": "#2c2833",
+                "surface-container-highest": "#37333e",
+                "on-secondary": "#3c0091",
+                "outline-variant": "#4a4455",
+                "on-tertiary-fixed": "#301400",
+                "secondary-fixed": "#e9ddff",
+                "on-surface-variant": "#ccc3d8",
+                "primary-fixed": "#eaddff",
+                "background": "#15121b",
+                "on-surface": "#e8dfee",
+                "on-tertiary": "#4f2500",
+                "surface-variant": "#37333e",
+                "on-tertiary-container": "#ffe0cd",
+                "surface": "#15121b",
+                "secondary": "#d0bcff",
+                "tertiary-container": "#a15100",
+                "on-primary-fixed-variant": "#5a00c6",
+                "primary-container": "#7c3aed",
+                "on-error": "#690005",
+                "on-secondary-fixed-variant": "#5516be",
+                "primary": "#d2bbff",
+                "surface-tint": "#d2bbff",
+                "surface-container": "#221e28",
+                "on-secondary-fixed": "#23005c",
+                "tertiary-fixed-dim": "#ffb784",
+                "outline": "#958da1",
+                "tertiary": "#ffb784",
+                "on-primary-fixed": "#25005a",
+                "surface-container-lowest": "#100d16",
+                "error-container": "#93000a",
+                "surface-bright": "#3c3742",
+                "primary-fixed-dim": "#d2bbff",
+                "on-error-container": "#ffdad6",
+                "inverse-primary": "#732ee4",
+                "error": "#ffb4ab",
+                "secondary-fixed-dim": "#d0bcff",
+                "on-secondary-container": "#c4abff",
+                "on-primary-container": "#ede0ff",
+                "surface-dim": "#15121b"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "base": "8px",
+                "container-max": "1280px",
+                "xl": "32px",
+                "sm": "8px",
+                "gutter": "24px",
+                "lg": "24px",
+                "xxl": "48px",
+                "md": "16px",
+                "xs": "4px"
+            },
+            "fontFamily": {
+                "display-lg-mobile": ["Hanken Grotesk"],
+                "body-md": ["Plus Jakarta Sans"],
+                "body-sm": ["Plus Jakarta Sans"],
+                "headline-sm": ["Hanken Grotesk"],
+                "headline-md": ["Hanken Grotesk"],
+                "number-xl": ["Geist"],
+                "body-lg": ["Plus Jakarta Sans"],
+                "label-md": ["Geist"],
+                "display-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                "number-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #15121b;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .splash-gradient {
+            background: radial-gradient(circle at 50% 50%, #2e1065 0%, #1e1b4b 40%, #15121b 100%);
+        }
+
+        .mesh-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(10vw, -10vh) scale(1.1); }
+            66% { transform: translate(-5vw, 15vh) scale(0.9); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.4s; }
+        .delay-2 { animation-delay: 0.7s; }
+        .delay-3 { animation-delay: 1s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-glow {
+            position: relative;
+        }
+
+        .logo-glow::after {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .loading-bar-container {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1px;
+            overflow: hidden;
+            margin-top: 48px;
+        }
+
+        .loading-bar-progress {
+            width: 100%;
+            height: 100%;
+            background: #7c3aed;
+            transform: translateX(-100%);
+            animation: loading 3s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0%); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center splash-gradient">
+<!-- Atmospheric Animated Background Elements -->
+<div class="mesh-gradient overflow-hidden">
+<div class="floating-orb bg-primary-container w-[400px] h-[400px] -top-20 -left-20"></div>
+<div class="floating-orb bg-secondary-container w-[350px] h-[350px] top-1/2 -right-40" style="animation-delay: -5s;"></div>
+<div class="floating-orb bg-tertiary-container w-[300px] h-[300px] -bottom-20 left-1/4" style="animation-delay: -10s;"></div>
+</div>
+<!-- Main Content Shell -->
+<main class="relative z-10 flex flex-col items-center text-center px-lg">
+<!-- Logo Section -->
+<div class="mb-xxl logo-glow fade-in">
+<img alt="InsightWallet Logo" class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(124,58,237,0.4)]" src="data:image/png;base64,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"/>
+</div>
+<!-- Brand Identity -->
+<div class="space-y-sm">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface tracking-tighter fade-in delay-1">
+                InsightWallet
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant opacity-80 fade-in delay-2">
+                Track smarter. Spend wiser.
+            </p>
+</div>
+<!-- Progress Indicator -->
+<div class="flex flex-col items-center fade-in delay-3">
+<div class="loading-bar-container">
+<div class="loading-bar-progress"></div>
+</div>
+<span class="mt-md font-label-md text-label-md text-on-surface-variant/40 tracking-[0.2em] uppercase">
+                Initializing Secure Core
+            </span>
+</div>
+</main>
+<!-- Bottom Branding Footnote -->
+<footer class="fixed bottom-xl w-full text-center z-10 fade-in delay-3">
+<div class="flex items-center justify-center gap-xs text-on-surface-variant/30">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+<span class="font-label-md text-label-md">Bank-grade encryption active</span>
+</div>
+</footer>
+<!-- Interactive Canvas Layer for Cursor Interaction -->
+<canvas class="absolute inset-0 pointer-events-none z-[1]" id="particleCanvas"></canvas>
+<script>
+        // Micro-interaction: Subtle Particle System
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(210, 187, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Simulate Page Transition after loading
+        setTimeout(() => {
+            // This is where you would normally navigate to the main dashboard
+            console.log("Loading sequence complete. Ready for main navigation.");
+        }, 5000);
+    </script>
+</body></html>

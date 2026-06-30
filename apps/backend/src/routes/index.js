@@ -1,0 +1,9 @@
+export { default as authRoutes } from './authRoutes.js';
+export { default as transactionRoutes } from './transactionRoutes.js';
+export { default as categoryRoutes } from './categoryRoutes.js';
+export { default as budgetRoutes } from './budgetRoutes.js';
+export { default as goalRoutes } from './goalRoutes.js';
+export { default as insightRoutes } from './insightRoutes.js';
+export { default as notificationRoutes } from './notificationRoutes.js';
+export { default as profileRoutes } from './profileRoutes.js';
+export { default as settingRoutes } from './settingRoutes.js';
