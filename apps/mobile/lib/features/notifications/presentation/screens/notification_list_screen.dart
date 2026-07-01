@@ -10,7 +10,6 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../domain/entities/notification_entity.dart';
-import '../../domain/entities/notification_entity.dart' show NotificationType;
 import '../providers/notification_provider.dart';
 
 enum _NotificationFilter { all, unread }

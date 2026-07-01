@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "message": "Insights data retrieved successfully",
+  "data": {
+    "monthlySummary": {
+      "income": 7500.00,
+      "expense": 3200.50,
+      "lastMonthIncome": 7200.00,
+      "lastMonthExpense": 3000.00
+    },
+    "spendingPrediction": {
+      "predictedAmount": 3100.00,
+      "currentAverage": 3050.00,
+      "trend": "stable"
+    },
+    "budgetSuggestions": [
+      {
+        "category": "Food & Drink",
+        "message": "Reduce dining out to save $50/month",
+        "urgency": "medium"
+      },
+      {
+        "category": "Entertainment",
+        "message": "Consider cheaper streaming plans",
+        "urgency": "low"
+      }
+    ],
+    "expenseTrends": [
+      { "month": "Jan", "amount": 2800 },
+      { "month": "Feb", "amount": 3100 },
+      { "month": "Mar", "amount": 2900 },
+      { "month": "Apr", "amount": 3300 },
+      { "month": "May", "amount": 3000 },
+      { "month": "Jun", "amount": 3200 }
+    ]
+  }
+}

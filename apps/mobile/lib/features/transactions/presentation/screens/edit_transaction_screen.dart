@@ -11,7 +11,6 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/format_utils.dart';
 import '../../../../core/utils/validators.dart';
 import '../../domain/entities/transaction_entity.dart';
-import '../../domain/entities/transaction_entity.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/transaction_provider.dart';
 
@@ -141,7 +140,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Edit Transaction'),
         leading: IconButton(
@@ -176,9 +175,11 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   validator: Validators.amount,
-                  style: AppTypography.numberXl.copyWith(color: AppColors.onSurface),
+                  style: AppTypography.numberXl.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   textAlign: TextAlign.center,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     prefixText: '\$ ',
                     labelText: 'Amount',
                     border: InputBorder.none,
@@ -186,12 +187,19 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     focusedErrorBorder: InputBorder.none,
-                    labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: Insets.lg),
-              Text('Category', style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant)),
+              Text(
+                'Category',
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: Insets.sm),
               _buildCategoryGrid(),
               const SizedBox(height: Insets.lg),
@@ -232,7 +240,12 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                 ),
               ),
               const SizedBox(height: Insets.lg),
-              Text('Receipt', style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant)),
+              Text(
+                'Receipt',
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: Insets.sm),
               GlassCard(
                 onTap: _pickReceipt,
@@ -244,7 +257,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                           : Icons.add_photo_alternate_outlined,
                       color: _receiptPath != null || widget.transaction.receiptUrl != null
                           ? AppColors.success
-                          : AppColors.onSurfaceVariant,
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: Insets.sm),
                     Text(
@@ -253,8 +266,8 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                           : 'Tap to add receipt image',
                       style: AppTypography.bodyMd.copyWith(
                         color: _receiptPath != null || widget.transaction.receiptUrl != null
-                            ? AppColors.onSurface
-                            : AppColors.onSurfaceVariant,
+                            ? Theme.of(context).colorScheme.onSurface
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

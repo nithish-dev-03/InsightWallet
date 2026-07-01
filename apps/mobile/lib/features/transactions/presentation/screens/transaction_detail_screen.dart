@@ -8,7 +8,6 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/format_utils.dart';
-import '../../domain/entities/transaction_entity.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/transaction_provider.dart';
 
@@ -22,7 +21,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     final transactionAsync = ref.watch(singleTransactionProvider(transactionId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Transaction Details'),
         actions: [
@@ -45,7 +44,9 @@ class TransactionDetailScreen extends ConsumerWidget {
             children: [
               Text(
                 'Failed to load transaction',
-                style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: Insets.md),
               FilledButton(
@@ -83,7 +84,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       Text(
                         transaction.category,
                         style: AppTypography.bodyMd.copyWith(
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(height: Insets.sm),
@@ -97,24 +98,27 @@ class TransactionDetailScreen extends ConsumerWidget {
                       Text(
                         transaction.description,
                         style: AppTypography.headlineSm.copyWith(
-                          color: AppColors.onSurface,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: Insets.sm),
                       _buildDetailRow(
+                        context,
                         Icons.calendar_today_rounded,
                         'Date',
                         FormatUtils.formatAbsoluteDate(transaction.date),
                       ),
                       if (transaction.note != null && transaction.note!.isNotEmpty)
                         _buildDetailRow(
+                          context,
                           Icons.notes_rounded,
                           'Note',
                           transaction.note!,
                         ),
                       if (transaction.tags != null && transaction.tags!.isNotEmpty)
                         _buildDetailRow(
+                          context,
                           Icons.label_outline_rounded,
                           'Tags',
                           transaction.tags!.join(', '),
@@ -131,7 +135,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Text(
                           'Receipt',
                           style: AppTypography.bodyMd.copyWith(
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: Insets.sm),
@@ -145,10 +149,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                             errorBuilder: (_, __, ___) => Container(
                               height: 200,
                               color: AppColors.surfaceContainerHighest,
-                              child: const Center(
+                              child: Center(
                                 child: Icon(
                                   Icons.broken_image_rounded,
-                                  color: AppColors.onSurfaceVariant,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ),
@@ -212,23 +216,25 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value) {
+  Widget _buildDetailRow(BuildContext context, IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(top: Insets.sm),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: AppColors.onSurfaceVariant),
+          Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(width: Insets.sm),
           Text(
             '$label: ',
             style: AppTypography.bodySm.copyWith(
-              color: AppColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: AppTypography.bodySm.copyWith(color: AppColors.onSurface),
+              style: AppTypography.bodySm.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
               textAlign: TextAlign.end,
             ),
           ),

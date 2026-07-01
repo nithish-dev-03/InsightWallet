@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "Transactions retrieved successfully",
+  "data": [
+    {
+      "id": "txn-101",
+      "amount": -124.50,
+      "type": "expense",
+      "category": "Shopping",
+      "category_icon": "shopping_cart",
+      "category_color": "#d2bbff",
+      "description": "Whole Foods Market",
+      "date": "2026-07-01T10:24:00Z",
+      "note": "Visa ****1234 • Palo Alto, CA",
+      "tags": ["grocery", "shopping"]
+    },
+    {
+      "id": "txn-102",
+      "amount": 4250.00,
+      "type": "income",
+      "category": "Salary",
+      "category_icon": "work",
+      "category_color": "#ffb784",
+      "description": "TechCorp Inc.",
+      "date": "2026-07-01T08:00:00Z",
+      "note": "Direct Deposit • HQ Office",
+      "tags": ["salary"]
+    },
+    {
+      "id": "txn-103",
+      "amount": -6.75,
+      "type": "expense",
+      "category": "Food & Drink",
+      "category_icon": "coffee",
+      "category_color": "#7c3aed",
+      "description": "Blue Bottle Coffee",
+      "date": "2026-06-30T15:45:00Z",
+      "note": "Apple Pay • Downtown",
+      "tags": ["coffee"]
+    }
+  ]
+}

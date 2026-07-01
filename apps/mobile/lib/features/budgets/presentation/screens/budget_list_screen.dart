@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../../core/shared/widgets/amount_text.dart';
 import '../../../../core/shared/widgets/app_scaffold.dart';

@@ -1,6 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/providers/providers.dart';
+import '../../data/models/profile_model.dart';
 import '../../data/repositories/profile_repository_impl.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../../domain/repositories/profile_repository.dart';
@@ -20,6 +23,11 @@ final profileProvider =
 class ProfileNotifier extends AsyncNotifier<ProfileEntity> {
   @override
   Future<ProfileEntity> build() async {
+    if (isLoadSampleData) {
+      final json = await SampleDataService.getProfileData();
+      final data = json['data'] as Map<String, dynamic>;
+      return ProfileModel.fromJson(data).toEntity();
+    }
     final repo = ref.read(profileRepositoryProvider);
     return repo.getProfile();
   }

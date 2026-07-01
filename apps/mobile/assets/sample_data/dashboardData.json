@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "message": "Dashboard data retrieved successfully",
+  "data": {
+    "balance": 42950.84,
+    "monthly_income": 8420.00,
+    "monthly_expense": 3180.00,
+    "savings": 5240.84,
+    "budget_remaining": 1250.00,
+    "insight": "You saved $420 more than last month. You're on track to hit your year-end travel goal!",
+    "chart_data": [450, 520, 380, 650, 710, 580],
+    "recent_transactions": [
+      {
+        "id": "txn-001",
+        "description": "Apple Store",
+        "amount": -1299.00,
+        "type": "expense",
+        "category": "Technology",
+        "category_icon": "shopping_bag",
+        "date": "2026-07-01T14:45:00Z"
+      },
+      {
+        "id": "txn-002",
+        "description": "Direct Deposit",
+        "amount": 4250.00,
+        "type": "income",
+        "category": "Salary",
+        "category_icon": "work",
+        "date": "2026-06-30T09:00:00Z"
+      },
+      {
+        "id": "txn-003",
+        "description": "The Gourmet Bistro",
+        "amount": -84.20,
+        "type": "expense",
+        "category": "Dining",
+        "category_icon": "restaurant",
+        "date": "2026-06-12T20:30:00Z"
+      }
+    ],
+    "spending_breakdown": [
+      { "category": "Housing", "amount": 3694.70, "percentage": 45.0, "color": "#d2bbff" },
+      { "category": "Food", "amount": 2298.93, "percentage": 28.0, "color": "#ffb784" },
+      { "category": "Other", "amount": 2216.82, "percentage": 27.0, "color": "#7c3aed" }
+    ]
+  }
+}

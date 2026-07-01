@@ -1,0 +1,21 @@
+{
+  "success": true,
+  "message": "Profile data retrieved successfully",
+  "data": {
+    "id": "user-001",
+    "name": "Alex Johnson",
+    "email": "alex.johnson@example.com",
+    "avatar": "https://example.com/avatars/alex.jpg",
+    "currency": "USD",
+    "theme": "dark",
+    "emailVerified": true,
+    "biometricEnabled": false,
+    "createdAt": "2023-01-15T00:00:00.000Z",
+    "stats": {
+      "totalTransactions": 342,
+      "totalCategories": 12,
+      "totalBudgets": 5,
+      "totalGoals": 3
+    }
+  }
+}

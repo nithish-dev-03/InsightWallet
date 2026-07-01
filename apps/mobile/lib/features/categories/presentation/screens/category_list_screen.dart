@@ -7,7 +7,6 @@ import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../domain/entities/category_entity.dart';
-import '../../domain/entities/category_entity.dart';
 import '../providers/category_provider.dart';
 
 class CategoryListScreen extends ConsumerWidget {
@@ -18,7 +17,7 @@ class CategoryListScreen extends ConsumerWidget {
     final categoriesAsync = ref.watch(categoryProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Categories'),
         centerTitle: true,
@@ -31,7 +30,9 @@ class CategoryListScreen extends ConsumerWidget {
             children: [
               Text(
                 'Failed to load categories',
-                style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
+                style: AppTypography.bodyMd.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: Insets.md),
               FilledButton(
@@ -48,7 +49,7 @@ class CategoryListScreen extends ConsumerWidget {
               categories.where((c) => c.type == 'expense').toList();
 
           return RefreshIndicator(
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             onRefresh: () => ref.read(categoryProvider.notifier).refresh(),
             child: ListView(
               padding: const EdgeInsets.all(Insets.md),
@@ -56,7 +57,9 @@ class CategoryListScreen extends ConsumerWidget {
                 if (incomeCategories.isNotEmpty) ...[
                   Text(
                     'Income',
-                    style: AppTypography.headlineSm.copyWith(color: AppColors.onSurface),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   const SizedBox(height: Insets.sm),
                   _buildCategoryGrid(incomeCategories),
@@ -65,7 +68,9 @@ class CategoryListScreen extends ConsumerWidget {
                 if (expenseCategories.isNotEmpty) ...[
                   Text(
                     'Expense',
-                    style: AppTypography.headlineSm.copyWith(color: AppColors.onSurface),
+                    style: AppTypography.headlineSm.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   const SizedBox(height: Insets.sm),
                   _buildCategoryGrid(expenseCategories),
@@ -135,7 +140,7 @@ class _CategoryCard extends StatelessWidget {
           Text(
             category.name,
             style: AppTypography.bodySm.copyWith(
-              color: AppColors.onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 12,
             ),
             maxLines: 1,

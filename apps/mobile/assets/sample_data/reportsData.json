@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "message": "Reports data retrieved successfully",
+  "data": {
+    "totalIncome": 12450.00,
+    "totalExpense": 8210.45,
+    "netSavings": 4239.55,
+    "categoryBreakdown": [
+      { "category": "Housing", "amount": 3694.70, "percentage": 45.0, "colorIndex": 0 },
+      { "category": "Food", "amount": 2298.93, "percentage": 28.0, "colorIndex": 4 },
+      { "category": "Other", "amount": 2216.82, "percentage": 27.0, "colorIndex": 0 }
+    ],
+    "cashFlow": [
+      { "month": "May", "income": 6000.00, "expense": 4000.00 },
+      { "month": "Jun", "income": 8000.00, "expense": 5500.00 },
+      { "month": "Jul", "income": 7000.00, "expense": 6500.00 },
+      { "month": "Aug", "income": 9000.00, "expense": 4500.00 },
+      { "month": "Sep", "income": 7500.00, "expense": 5000.00 },
+      { "month": "Oct", "income": 8500.00, "expense": 6000.00 }
+    ],
+    "trend": [
+      { "label": "Oct 01", "value": 4200.0 },
+      { "label": "Oct 08", "value": 5100.0 },
+      { "label": "Oct 15", "value": 5800.0 },
+      { "label": "Oct 22", "value": 4900.0 },
+      { "label": "Oct 29", "value": 6400.0 },
+      { "label": "Oct 31", "value": 7200.0 }
+    ],
+    "topCategories": [
+      { "name": "Food & Dining", "amount": 2340.00, "percentage": 94.0, "colorIndex": 0 },
+      { "name": "Shopping", "amount": 1120.00, "percentage": 75.0, "colorIndex": 4 },
+      { "name": "Transportation", "amount": 650.00, "percentage": 65.0, "colorIndex": 2 }
+    ]
+  }
+}

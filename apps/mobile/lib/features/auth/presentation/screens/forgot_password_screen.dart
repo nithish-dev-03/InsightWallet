@@ -20,7 +20,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -64,17 +65,23 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     // Stitch design system tokens
     final bgColor = isDark ? const Color(0xFF15121B) : const Color(0xFFFCF8FF);
-    final surfaceColor = isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
-    final onSurface = isDark ? const Color(0xFFE8DFEE) : const Color(0xFF1B1B24);
-    final onSurfaceVariant = isDark ? const Color(0xFFCCC3D8) : const Color(0xFF464555);
-    final primary = isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD);
-    const onPrimary = Colors.white;
-    final outlineVariant = isDark ? const Color(0xFF4A4455) : const Color(0xFFC7C4D8);
-    final inputBgColor = isDark ? const Color(0xFF15121B) : const Color(0xFFFFFFFF);
+    final surfaceColor =
+        isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
+    final onSurface =
+        isDark ? const Color(0xFFE8DFEE) : const Color(0xFF1B1B24);
+    final onSurfaceVariant =
+        isDark ? const Color(0xFFCCC3D8) : const Color(0xFF464555);
+    final primary = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final onPrimary =
+        isDark ? const Color(0xFF3F008E) : const Color(0xFFFFFFFF);
+    final outlineVariant =
+        isDark ? const Color(0xFF4A4455) : const Color(0xFFC7C4D8);
+    final surfaceContainerLow =
+        isDark ? const Color(0xFF1D1A24) : const Color(0xFFF5F2FF);
 
     final cardBgColor = isDark
-        ? surfaceColor.withValues(alpha: 0.6)
-        : surfaceColor.withValues(alpha: 0.8);
+        ? const Color(0xFF1E293B).withValues(alpha: 0.6)
+        : Colors.white.withValues(alpha: 0.8);
     final cardBorderColor = isDark
         ? Colors.white.withValues(alpha: 0.08)
         : const Color(0xFFE2E8F0).withValues(alpha: 0.8);
@@ -121,7 +128,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            (isDark ? const Color(0xFF9061F9) : const Color(0xFF4F46E5))
+                            (isDark
+                                    ? const Color(0xFF7C3AED)
+                                    : const Color(0xFF4648D4))
                                 .withValues(alpha: isDark ? 0.12 : 0.06),
                             Colors.transparent,
                           ],
@@ -138,9 +147,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0, vertical: 32.0),
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 420),
                     child: Column(
@@ -166,13 +177,17 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             width: 80,
                             height: 80,
                             decoration: BoxDecoration(
-                              color: isDark ? surfaceColor : const Color(0xFF1B1B24), // Inverse surface for high-contrast light mode logo
+                              color: isDark
+                                  ? Colors.transparent
+                                  : const Color(
+                                      0xFF1B1B24), // Inverse surface for high-contrast light mode logo
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: isDark
                                   ? null
                                   : [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.05),
+                                        color: Colors.black
+                                            .withValues(alpha: 0.05),
                                         blurRadius: 10,
                                         offset: const Offset(0, 4),
                                       )
@@ -213,7 +228,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                           borderRadius: BorderRadius.circular(24),
                           color: cardBgColor,
                           border: Border.all(color: cardBorderColor),
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0, vertical: 32.0),
                           child: sent
                               ? Column(
                                   children: [
@@ -242,22 +258,30 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                     const SizedBox(height: 32),
                                     InteractiveButton(
                                       onTap: () {
-                                        ref.read(_forgotPasswordProvider.notifier).state = false;
+                                        ref
+                                            .read(_forgotPasswordProvider
+                                                .notifier)
+                                            .state = false;
                                         _emailController.clear();
                                       },
                                       child: Container(
-                                        height: 52,
+                                        height: 56,
                                         decoration: BoxDecoration(
                                           color: primary,
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          isDark ? 'Send Another Email' : 'SEND ANOTHER EMAIL',
-                                          style: AppTypography.headlineSm.copyWith(
+                                          isDark
+                                              ? 'Send Another Email'
+                                              : 'SEND ANOTHER EMAIL',
+                                          style:
+                                              AppTypography.headlineSm.copyWith(
                                             color: onPrimary,
-                                            fontSize: 16,
+                                            fontSize: isDark ? 18 : 16,
                                             fontWeight: FontWeight.w600,
+                                            letterSpacing: isDark ? 0.0 : 0.8,
                                           ),
                                         ),
                                       ),
@@ -267,54 +291,73 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                               : Form(
                                   key: _formKey,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       // Email Field Label
                                       Text(
-                                        isDark ? 'Email Address' : 'EMAIL ADDRESS',
+                                        isDark
+                                            ? 'Email Address'
+                                            : 'EMAIL ADDRESS',
                                         style: AppTypography.labelMd.copyWith(
                                           color: onSurfaceVariant,
                                           fontSize: 12,
-                                          fontWeight: isDark ? FontWeight.w500 : FontWeight.w600,
+                                          fontWeight: isDark
+                                              ? FontWeight.w500
+                                              : FontWeight.w600,
                                           letterSpacing: 0.6,
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      
+
                                       // Email Input
                                       TextFormField(
                                         controller: _emailController,
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         textInputAction: TextInputAction.done,
-                                        style: AppTypography.bodyMd.copyWith(color: onSurface),
+                                        style: AppTypography.bodyMd
+                                            .copyWith(color: onSurface),
                                         validator: Validators.email,
-                                        onFieldSubmitted: (_) => _handleSubmit(),
+                                        onFieldSubmitted: (_) =>
+                                            _handleSubmit(),
                                         decoration: InputDecoration(
                                           filled: true,
-                                          fillColor: inputBgColor,
+                                          fillColor: surfaceContainerLow,
                                           hintText: 'name@example.com',
-                                          hintStyle: AppTypography.bodyMd.copyWith(
-                                            color: onSurfaceVariant.withValues(alpha: 0.5),
+                                          hintStyle:
+                                              AppTypography.bodyMd.copyWith(
+                                            color: onSurfaceVariant.withValues(
+                                                alpha: 0.5),
                                           ),
                                           prefixIcon: Icon(
-                                            Icons.mail_outline,
-                                            color: onSurfaceVariant.withValues(alpha: 0.7),
+                                            Icons.email_outlined,
+                                            color: onSurfaceVariant.withValues(
+                                                alpha: 0.7),
                                           ),
-                                          contentPadding: const EdgeInsets.symmetric(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
                                             horizontal: 16,
                                             vertical: 16,
                                           ),
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: BorderSide(color: outlineVariant),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                                color: outlineVariant),
                                           ),
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: BorderSide(color: outlineVariant),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                                color: outlineVariant),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: BorderSide(color: primary, width: isDark ? 1 : 2),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                                color: primary,
+                                                width: isDark ? 1 : 2),
                                           ),
                                         ),
                                       ),
@@ -324,23 +367,28 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                       InteractiveButton(
                                         onTap: loading ? () {} : _handleSubmit,
                                         child: Container(
-                                          height: 52,
+                                          height: 56,
                                           decoration: BoxDecoration(
                                             color: primary,
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             boxShadow: isDark
                                                 ? [
                                                     BoxShadow(
-                                                      color: primary.withValues(alpha: 0.3),
-                                                      blurRadius: 15,
-                                                      offset: const Offset(0, 4),
+                                                      color: primary.withValues(
+                                                          alpha: 0.3),
+                                                      blurRadius: 20,
+                                                      offset:
+                                                          const Offset(0, 4),
                                                     )
                                                   ]
                                                 : [
                                                     BoxShadow(
-                                                      color: primary.withValues(alpha: 0.2),
-                                                      blurRadius: 10,
-                                                      offset: const Offset(0, 6),
+                                                      color: primary.withValues(
+                                                          alpha: 0.2),
+                                                      blurRadius: 15,
+                                                      offset:
+                                                          const Offset(0, 10),
                                                     )
                                                   ],
                                           ),
@@ -349,20 +397,30 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                                               ? SizedBox(
                                                   width: 20,
                                                   height: 20,
-                                                  child: CircularProgressIndicator(
+                                                  child:
+                                                      CircularProgressIndicator(
                                                     strokeWidth: 2,
                                                     color: onPrimary,
                                                   ),
                                                 )
                                               : Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      isDark ? 'Send Reset Link' : 'SEND RESET LINK',
-                                                      style: AppTypography.headlineSm.copyWith(
+                                                      isDark
+                                                          ? 'Send Reset Link'
+                                                          : 'SEND RESET LINK',
+                                                      style: AppTypography
+                                                          .headlineSm
+                                                          .copyWith(
                                                         color: onPrimary,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w600,
+                                                        fontSize:
+                                                            isDark ? 18 : 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        letterSpacing:
+                                                            isDark ? 0.0 : 0.8,
                                                       ),
                                                     ),
                                                     const SizedBox(width: 8),
@@ -389,18 +447,21 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  isDark ? Icons.chevron_left : Icons.arrow_back,
-                                  color: isDark ? onSurfaceVariant : primary,
+                                  isDark
+                                      ? Icons.chevron_left
+                                      : Icons.arrow_back,
+                                  color: primary,
                                   size: 18,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  isDark ? 'Back to Sign In' : 'Back to Sign In',
+                                  'Back to Sign In',
                                   style: AppTypography.bodySm.copyWith(
-                                    color: isDark ? onSurfaceVariant : primary,
+                                    color: primary,
                                     fontWeight: FontWeight.w700,
                                     decoration: TextDecoration.underline,
-                                    decorationColor: (isDark ? onSurfaceVariant : primary).withValues(alpha: 0.3),
+                                    decorationColor:
+                                        primary.withValues(alpha: 0.3),
                                   ),
                                 ),
                               ],
@@ -447,7 +508,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                               style: AppTypography.bodySm.copyWith(
                                 color: onSurfaceVariant.withValues(alpha: 0.5),
                                 fontSize: 10,
-                                fontWeight: isDark ? FontWeight.normal : FontWeight.bold,
+                                fontWeight: isDark
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                                 letterSpacing: isDark ? 0.0 : 1.0,
                               ),
                               textAlign: TextAlign.center,

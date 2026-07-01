@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
+import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/services/api_service.dart';
 import '../../../../core/services/storage_service.dart';
 import '../../data/models/transaction_filter.dart';
+import '../../data/models/transaction_model.dart';
 import '../../data/repositories/transaction_repository_impl.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../../domain/repositories/transaction_repository.dart';
@@ -39,6 +42,31 @@ class TransactionListNotifier extends AsyncNotifier<List<TransactionEntity>> {
   TransactionFilter get _filter => ref.read(transactionFilterProvider);
 
   Future<List<TransactionEntity>> _fetchPage(int page) async {
+    if (isLoadSampleData) {
+      final json = await SampleDataService.getTransactionsData();
+      final list = json['data'] as List<dynamic>;
+      final transactions = list
+          .map((e) {
+            final model =
+                TransactionModel.fromJson(e as Map<String, dynamic>);
+            return TransactionEntity(
+              id: model.id,
+              amount: model.amount,
+              type: model.type,
+              category: model.category,
+              categoryIcon: model.categoryIcon,
+              categoryColor: model.categoryColor,
+              description: model.description,
+              date: model.date,
+              note: model.note,
+              tags: model.tags,
+              receiptUrl: model.receiptUrl,
+            );
+          })
+          .toList();
+      _hasMore = false;
+      return transactions;
+    }
     final transactions = await _repository.getTransactions(
       page: page,
       limit: _filter.limit,

@@ -2,7 +2,6 @@ import '../../../../core/config/api_config.dart';
 import '../../../../core/services/api_service.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../../domain/repositories/transaction_repository.dart';
-import '../models/transaction_filter.dart';
 import '../models/transaction_model.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {

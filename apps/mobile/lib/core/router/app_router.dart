@@ -10,50 +10,11 @@ import 'package:insightwallet/features/auth/presentation/screens/register_screen
 import 'package:insightwallet/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:insightwallet/features/auth/presentation/screens/reset_password_screen.dart';
 
-import '../services/storage_service.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_spacing.dart';
-import '../theme/app_typography.dart';
-
-class _DashboardScreen extends StatelessWidget {
-  const _DashboardScreen();
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Dashboard Screen')),
-    );
-  }
-}
-
-class _TransactionsScreen extends StatelessWidget {
-  const _TransactionsScreen();
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Transactions Screen')),
-    );
-  }
-}
-
-class _ReportsScreen extends StatelessWidget {
-  const _ReportsScreen();
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Reports Screen')),
-    );
-  }
-}
-
-class _ProfileScreen extends StatelessWidget {
-  const _ProfileScreen();
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Profile Screen')),
-    );
-  }
-}
+import 'package:insightwallet/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:insightwallet/features/transactions/presentation/screens/transaction_list_screen.dart';
+import 'package:insightwallet/features/reports/presentation/screens/reports_screen.dart';
+import 'package:insightwallet/features/profile/presentation/screens/profile_screen.dart';
+import 'package:insightwallet/features/notifications/presentation/screens/notification_list_screen.dart';
 
 // ── Shell Scaffold with Bottom Navigation ──
 class _MainShell extends StatelessWidget {
@@ -146,6 +107,7 @@ class AppRouter {
           path: '/auth/login',
           name: 'login',
           builder: (_, __) => const LoginScreen(),
+          // builder: (_, __) => const DashboardScreen(),
         ),
         GoRoute(
           path: '/auth/register',
@@ -173,28 +135,33 @@ class AppRouter {
             ),
           ],
         ),
+        GoRoute(
+          path: '/notifications',
+          name: 'notifications',
+          builder: (_, __) => const NotificationListScreen(),
+        ),
         ShellRoute(
           builder: (_, __, child) => _MainShell(child: child),
           routes: [
             GoRoute(
               path: '/dashboard',
               name: 'dashboard',
-              builder: (_, __) => const _DashboardScreen(),
+              builder: (_, __) => const DashboardScreen(),
             ),
             GoRoute(
               path: '/transactions',
               name: 'transactions',
-              builder: (_, __) => const _TransactionsScreen(),
+              builder: (_, __) => const TransactionListScreen(),
             ),
             GoRoute(
               path: '/reports',
               name: 'reports',
-              builder: (_, __) => const _ReportsScreen(),
+              builder: (_, __) => const ReportsScreen(),
             ),
             GoRoute(
               path: '/profile',
               name: 'profile',
-              builder: (_, __) => const _ProfileScreen(),
+              builder: (_, __) => const ProfileScreen(),
             ),
           ],
         ),

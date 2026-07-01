@@ -497,7 +497,7 @@ class _SettingsSwitchTile extends StatelessWidget {
           const SizedBox(width: Insets.sm),
           Switch(
             value: value,
-            activeColor: AppColors.darkPrimary,
+            activeThumbColor: AppColors.darkPrimary,
             onChanged: onChanged,
           ),
         ],

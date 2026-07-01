@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/shared/widgets/glass_card.dart';
 import '../../../../core/shared/widgets/loading_shimmer.dart';
-import '../../../../core/shared/widgets/section_header.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
@@ -22,153 +20,297 @@ class DashboardScreen extends ConsumerWidget {
     final dashboardAsync = ref.watch(dashboardProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: RefreshIndicator(
-        color: AppColors.primary,
-        onRefresh: () => ref.read(dashboardProvider.notifier).refresh(),
-        child: dashboardAsync.when(
-          loading: () => const ListShimmer(itemCount: 6),
-          error: (e, _) => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Something went wrong',
-                  style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
-                ),
-                const SizedBox(height: Insets.md),
-                FilledButton(
-                  onPressed: () => ref.invalidate(dashboardProvider),
-                  child: const Text('Retry'),
-                ),
-              ],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: RefreshIndicator(
+          color: Theme.of(context).colorScheme.primary,
+          onRefresh: () => ref.read(dashboardProvider.notifier).refresh(),
+          child: dashboardAsync.when(
+            loading: () => const ListShimmer(itemCount: 6),
+            error: (e, _) => Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Something went wrong',
+                    style: AppTypography.bodyMd.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: Insets.md),
+                  FilledButton(
+                    onPressed: () => ref.invalidate(dashboardProvider),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
             ),
+            data: (data) => _DashboardContent(data: data),
           ),
-          data: (data) => _DashboardContent(data: data),
         ),
       ),
     );
   }
 }
 
-class _DashboardContent extends StatelessWidget {
+class _DashboardContent extends StatefulWidget {
   final DashboardEntity data;
 
   const _DashboardContent({required this.data});
 
   @override
+  State<_DashboardContent> createState() => _DashboardContentState();
+}
+
+class _DashboardContentState extends State<_DashboardContent> {
+  @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.only(bottom: Insets.xl),
+      padding: const EdgeInsets.fromLTRB(Insets.md, Insets.sm, Insets.md, Insets.xxl),
       children: [
         _buildAppBar(context),
+        const SizedBox(height: Insets.md),
+        _buildGreeting(context),
+        const SizedBox(height: Insets.lg),
         _buildBalanceCard(context),
-        const SizedBox(height: Insets.md),
-        _buildIncomeExpenseRow(context),
-        const SizedBox(height: Insets.md),
+        const SizedBox(height: Insets.lg),
         _buildQuickActions(context),
-        const SizedBox(height: Insets.md),
-        _buildInsightBanner(context),
         const SizedBox(height: Insets.lg),
-        const SectionHeader(title: 'Spending Breakdown'),
-        const SizedBox(height: Insets.sm),
-        _buildPieChart(context),
+        _buildWeeklySpendingChart(context),
         const SizedBox(height: Insets.lg),
-        const SectionHeader(title: 'Recent Transactions', actionLabel: 'See All'),
-        const SizedBox(height: Insets.sm),
+        _buildMonthlyBudget(context),
+        const SizedBox(height: Insets.lg),
         _buildRecentTransactions(context),
-        const SizedBox(height: Insets.lg),
-        const SectionHeader(title: 'Monthly Trend'),
-        const SizedBox(height: Insets.sm),
-        _buildLineChart(context),
       ],
     );
   }
 
   Widget _buildAppBar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Insets.md, Insets.sm, Insets.md, Insets.sm),
-      child: Row(
-        children: [
-          Text(
-            'InsightWallet',
-            style: AppTypography.headlineMd.copyWith(color: AppColors.onSurface),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
           ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
-            color: AppColors.onSurfaceVariant,
+          onPressed: () {},
+        ),
+        const SizedBox(width: Insets.xs),
+        Text(
+          'InsightWallet',
+          style: AppTypography.headlineMd.copyWith(
+            fontWeight: FontWeight.w800,
+            color: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
+            letterSpacing: -0.5,
           ),
-          const SizedBox(width: Insets.sm),
-          const CircleAvatar(
-            radius: 18,
-            backgroundColor: AppColors.primaryContainer,
-            child: Icon(Icons.person, size: 20, color: Colors.white),
+        ),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.notifications_none_outlined),
+          onPressed: () => context.push('/notifications'),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: Insets.xs),
+        Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: isDark ? const Color(0xFFD2BBFF).withValues(alpha: 0.2) : const Color(0xFF3525CD).withValues(alpha: 0.2),
+              width: 2,
+            ),
           ),
-        ],
-      ),
+          child: const ClipRRect(
+            borderRadius: AppRadius.brFull,
+            child: Image(
+              image: NetworkImage(
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuDc4P91ASw0u4e7bnbpZ9-x-GF05UH8kSUPdR07iBoKzIMmVgLRm-lwjIGKLmfG8_oPxiEt2qy0WiUtwg1n0KeSiFDsiBnCNFHx4xD99Yuc13RzEK9zlXCW30ByP9f0LhYj5oBjmfbYxatzpqjaB7Afu6NUZnEryTpGKksFV5-46hIXezwFTuyyaqBEeGIlGJDD2Kz0TBLbXw0zxeqyuDnu3k9d9kxXp6qwh5OVwin6XNftIQlu1DNP745qXNRLEFZSjDL1EPctMEC6',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGreeting(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Hello, Alex',
+          style: AppTypography.headlineMd.copyWith(
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Ready to optimize your financial intelligence today?',
+          style: AppTypography.bodySm.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildBalanceCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
-      child: Container(
-        padding: const EdgeInsets.all(Insets.lg),
-        decoration: const BoxDecoration(
-          gradient: AppColors.primaryGradient,
-          borderRadius: AppRadius.brXl,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Total Balance',
-                  style: AppTypography.bodyMd.copyWith(
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.visibility_rounded,
-                  size: 20,
-                  color: Colors.white.withValues(alpha: 0.7),
-                ),
-              ],
-            ),
-            const SizedBox(height: Insets.sm),
-            Text(
-              FormatUtils.formatCurrency(data.balance),
-              style: AppTypography.numberXl.copyWith(color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+    final balanceText = FormatUtils.formatCurrency(widget.data.balance);
+    final dollarPart = balanceText.substring(0, balanceText.indexOf('.'));
+    final centsPart = balanceText.substring(balanceText.indexOf('.'));
 
-  Widget _buildIncomeExpenseRow(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
-      child: Row(
+    return Container(
+      padding: const EdgeInsets.all(Insets.lg),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF7C3AED), Color(0xFF571BC1)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: AppRadius.brXl,
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF7C3AED).withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          Expanded(
-            child: _MiniStatCard(
-              label: 'Income',
-              amount: data.monthlyIncome,
-              gradient: AppColors.incomeGradient,
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Icon(
+              Icons.account_balance_wallet_outlined,
+              size: 130,
+              color: Colors.white.withValues(alpha: 0.1),
             ),
           ),
-          const SizedBox(width: Insets.sm),
-          Expanded(
-            child: _MiniStatCard(
-              label: 'Expense',
-              amount: data.monthlyExpense,
-              gradient: AppColors.expenseGradient,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'TOTAL BALANCE',
+                style: AppTypography.labelMd.copyWith(
+                  color: Colors.white.withValues(alpha: 0.8),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: Insets.xs),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    dollarPart,
+                    style: AppTypography.displayLg.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 38,
+                    ),
+                  ),
+                  Text(
+                    centsPart,
+                    style: AppTypography.headlineSm.copyWith(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Insets.lg),
+              Container(
+                height: 1,
+                color: Colors.white.withValues(alpha: 0.15),
+              ),
+              const SizedBox(height: Insets.lg),
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            borderRadius: AppRadius.brMd,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_downward,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: Insets.sm),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Income',
+                              style: AppTypography.labelMd.copyWith(
+                                color: Colors.white.withValues(alpha: 0.6),
+                              ),
+                            ),
+                            Text(
+                              FormatUtils.formatCurrency(widget.data.monthlyIncome),
+                              style: AppTypography.bodyMd.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.1),
+                            borderRadius: AppRadius.brMd,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: Insets.sm),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Expenses',
+                              style: AppTypography.labelMd.copyWith(
+                                color: Colors.white.withValues(alpha: 0.6),
+                              ),
+                            ),
+                            Text(
+                              FormatUtils.formatCurrency(widget.data.monthlyExpense),
+                              style: AppTypography.bodyMd.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -176,422 +318,474 @@ class _DashboardContent extends StatelessWidget {
   }
 
   Widget _buildQuickActions(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      children: [
+        _buildActionRow(
+          context,
+          icon: Icons.add,
+          label: 'Add Transaction',
+          iconColor: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
+          bgColor: (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD)).withValues(alpha: 0.2),
+          onTap: () {},
+        ),
+        const SizedBox(height: Insets.sm),
+        _buildActionRow(
+          context,
+          icon: Icons.document_scanner_outlined,
+          label: 'Scan Receipt',
+          iconColor: isDark ? const Color(0xFFFFB784) : const Color(0xFF713700),
+          bgColor: (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6)).withValues(alpha: 0.25),
+          onTap: () {},
+        ),
+        const SizedBox(height: Insets.sm),
+        _buildActionRow(
+          context,
+          icon: Icons.sync_alt,
+          label: 'Transfer Funds',
+          iconColor: isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be),
+          bgColor: (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff)).withValues(alpha: 0.25),
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color iconColor,
+    required Color bgColor,
+    required VoidCallback onTap,
+  }) {
+    return GlassCard(
+      padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: Insets.md),
+      onTap: onTap,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _QuickActionButton(
-            icon: Icons.swap_horiz_rounded,
-            label: 'Transfer',
-            onTap: () {},
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: bgColor,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: 22,
+            ),
           ),
-          _QuickActionButton(
-            icon: Icons.wallet_rounded,
-            label: 'Top Up',
-            onTap: () {},
+          const SizedBox(width: Insets.md),
+          Text(
+            label,
+            style: AppTypography.headlineSm.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
-          _QuickActionButton(
-            icon: Icons.receipt_long_rounded,
-            label: 'Bills',
-            onTap: () {},
-          ),
-          _QuickActionButton(
-            icon: Icons.document_scanner_rounded,
-            label: 'Scan',
-            onTap: () {},
+          const Spacer(),
+          Icon(
+            Icons.chevron_right,
+            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            size: 20,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildInsightBanner(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
-      child: GlassCard(
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: AppColors.primaryContainer.withValues(alpha: 0.2),
-                borderRadius: AppRadius.brMd,
-              ),
-              child: const Icon(
-                Icons.auto_awesome_rounded,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: Insets.sm),
-            Expanded(
-              child: Text(
-                data.insight,
-                style: AppTypography.bodySm.copyWith(color: AppColors.onSurfaceVariant),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _buildWeeklySpendingChart(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
 
-  Widget _buildPieChart(BuildContext context) {
-    final breakdown = data.spendingBreakdown;
-    if (breakdown.isEmpty) {
-      return const SizedBox(
-        height: 200,
-        child: Center(child: Text('No spending data')),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
-      child: GlassCard(
-        child: SizedBox(
-          height: 220,
-          child: Row(
+    return GlassCard(
+      padding: const EdgeInsets.all(Insets.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: PieChart(
-                  PieChartData(
-                    sectionsSpace: 2,
-                    centerSpaceRadius: 40,
-                    sections: List.generate(
-                      breakdown.length,
-                      (i) {
-                        final c = breakdown[i];
-                        final colorIndex = i % AppColors.chartColors.length;
-                        return PieChartSectionData(
-                          value: c.percentage,
-                          color: AppColors.chartColors[colorIndex],
-                          radius: 30,
-                          title: '${c.percentage.toStringAsFixed(0)}%',
-                          titleStyle: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+              Text(
+                'Weekly Spending',
+                style: AppTypography.headlineSm.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(width: Insets.md),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(
-                  breakdown.length,
-                  (i) {
-                    final c = breakdown[i];
-                    final colorIndex = i % AppColors.chartColors.length;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: AppColors.chartColors[colorIndex],
-                              borderRadius: AppRadius.brSm,
-                            ),
-                          ),
-                          const SizedBox(width: Insets.sm),
-                          Text(
-                            c.category,
-                            style: AppTypography.bodySm.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.15),
+                  borderRadius: AppRadius.brFull,
+                ),
+                child: Text(
+                  '+12% vs last week',
+                  style: AppTypography.labelMd.copyWith(
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecentTransactions(BuildContext context) {
-    final transactions = data.recentTransactions;
-    if (transactions.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.all(Insets.md),
-        child: Center(child: Text('No recent transactions')),
-      );
-    }
-
-    return Column(
-      children: List.generate(
-        transactions.length,
-        (i) {
-          final t = transactions[i];
-          final isIncome = t.type == 'income';
-          return Padding(
-            padding: EdgeInsets.only(
-              left: Insets.md,
-              right: Insets.md,
-              bottom: i < transactions.length - 1 ? Insets.sm : 0,
-            ),
-            child: GlassCard(
-              child: Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: (isIncome
-                              ? AppColors.income
-                              : AppColors.expense)
-                          .withValues(alpha: 0.15),
-                      borderRadius: AppRadius.brMd,
-                    ),
-                    child: Icon(
-                      _categoryIcon(t.categoryIcon),
-                      size: 20,
-                      color: isIncome ? AppColors.income : AppColors.expense,
+          const SizedBox(height: Insets.xl),
+          SizedBox(
+            height: 160,
+            child: LineChart(
+              LineChartData(
+                gridData: const FlGridData(show: false),
+                titlesData: FlTitlesData(
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 22,
+                      getTitlesWidget: (value, meta) {
+                        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        final index = value.toInt();
+                        if (index >= 0 && index < days.length) {
+                          return Text(
+                            days[index],
+                            style: AppTypography.labelMd.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                          );
+                        }
+                        return const SizedBox();
+                      },
                     ),
                   ),
-                  const SizedBox(width: Insets.sm),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          t.description,
-                          style: AppTypography.bodyMd.copyWith(
-                            color: AppColors.onSurface,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          FormatUtils.formatRelativeDate(t.date),
-                          style: AppTypography.bodySm.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
+                ),
+                borderData: FlBorderData(show: false),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: const [
+                      FlSpot(0, 120),
+                      FlSpot(1, 110),
+                      FlSpot(2, 60),
+                      FlSpot(3, 80),
+                      FlSpot(4, 40),
+                      FlSpot(5, 70),
+                      FlSpot(6, 30),
+                    ],
+                    isCurved: true,
+                    color: const Color(0xFF7C3AED),
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(
+                      show: true,
+                      getDotPainter: (spot, percent, barData, index) =>
+                          FlDotCirclePainter(
+                        radius: 4,
+                        color: const Color(0xFF7C3AED),
+                        strokeWidth: 0,
+                      ),
+                      checkToShowDot: (spot, barData) {
+                        return spot.x == 1 || spot.x == 3 || spot.x == 4 || spot.x == 5 || spot.x == 6;
+                      },
                     ),
-                  ),
-                  Text(
-                    '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(t.amount)}',
-                    style: AppTypography.labelMd.copyWith(
-                      color: isIncome ? AppColors.income : AppColors.expense,
-                      fontWeight: FontWeight.w600,
+                    belowBarData: BarAreaData(
+                      show: true,
+                      gradient: LinearGradient(
+                        colors: [
+                          const Color(0xFF7C3AED).withValues(alpha: 0.3),
+                          const Color(0xFF7C3AED).withValues(alpha: 0.0),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildLineChart(BuildContext context) {
-    final chartData = data.chartData;
-    if (chartData.isEmpty) {
-      return const SizedBox(
-        height: 200,
-        child: Center(child: Text('No trend data')),
-      );
-    }
+  Widget _buildMonthlyBudget(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final secondaryColor = isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be);
+    final tertiaryColor = isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md),
-      child: GlassCard(
-        child: SizedBox(
-          height: 200,
-          child: LineChart(
-            LineChartData(
-              gridData: FlGridData(
-                show: true,
-                drawVerticalLine: false,
-                horizontalInterval: 1,
-                getDrawingHorizontalLine: (value) => FlLine(
-                  color: AppColors.outline.withValues(alpha: 0.1),
-                  strokeWidth: 1,
+    return GlassCard(
+      padding: const EdgeInsets.all(Insets.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Monthly Budget',
+            style: AppTypography.headlineSm.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: Insets.lg),
+          _buildBudgetProgressRow(
+            context,
+            category: 'Dining & Drinks',
+            spent: 450,
+            total: 600,
+            color: primaryColor,
+          ),
+          const SizedBox(height: Insets.md),
+          _buildBudgetProgressRow(
+            context,
+            category: 'Entertainment',
+            spent: 120,
+            total: 300,
+            color: secondaryColor,
+          ),
+          const SizedBox(height: Insets.md),
+          _buildBudgetProgressRow(
+            context,
+            category: 'Shopping',
+            spent: 890,
+            total: 1000,
+            color: tertiaryColor,
+          ),
+          const SizedBox(height: Insets.lg),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: primaryColor.withValues(alpha: 0.3)),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: AppRadius.brMd,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: Text(
+                'MANAGE BUDGETS',
+                style: AppTypography.labelMd.copyWith(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
                 ),
               ),
-              titlesData: FlTitlesData(
-                leftTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 28,
-                    interval: 1,
-                    getTitlesWidget: (value, meta) {
-                      final months = [
-                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-                      ];
-                      final index = value.toInt();
-                      if (index >= 0 && index < months.length) {
-                        return Text(
-                          months[index],
-                          style: AppTypography.labelMd.copyWith(
-                            color: AppColors.onSurfaceVariant,
-                            fontSize: 10,
-                          ),
-                        );
-                      }
-                      return const SizedBox();
-                    },
-                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBudgetProgressRow(
+    BuildContext context, {
+    required String category,
+    required double spent,
+    required double total,
+    required Color color,
+  }) {
+    final progress = (spent / total).clamp(0.0, 1.0);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              category,
+              style: AppTypography.bodySm.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              '${FormatUtils.formatCurrency(spent)} / ${FormatUtils.formatCurrency(total)}',
+              style: AppTypography.labelMd.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: AppRadius.brFull,
+          child: Container(
+            height: 8,
+            width: double.infinity,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: progress,
+                child: Container(
+                  color: color,
                 ),
               ),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: List.generate(
-                    chartData.length,
-                    (i) => FlSpot(i.toDouble(), chartData[i]),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentTransactions(BuildContext context) {
+    final transactions = widget.data.recentTransactions;
+
+    return GlassCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(Insets.lg),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Recent Transactions',
+                  style: AppTypography.headlineSm.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  isCurved: true,
-                  color: AppColors.primary,
-                  barWidth: 3,
-                  isStrokeCapRound: true,
-                  dotData: const FlDotData(show: false),
-                  belowBarData: BarAreaData(
-                    show: true,
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                ),
+                TextButton(
+                  onPressed: () => context.go('/transactions'),
+                  child: Text(
+                    'VIEW ALL',
+                    style: AppTypography.labelMd.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
+          Container(
+            height: 1,
+            color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.1),
+          ),
+          if (transactions.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(Insets.lg),
+              child: Center(child: Text('No recent transactions')),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: transactions.length,
+              separatorBuilder: (context, index) => Container(
+                height: 1,
+                color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.1),
+              ),
+              itemBuilder: (context, index) {
+                final t = transactions[index];
+                final isIncome = t.type == 'income';
+                final isDark = Theme.of(context).brightness == Brightness.dark;
+
+                Color containerBg;
+                Color iconColor;
+
+                switch (t.category.toLowerCase()) {
+                  case 'technology':
+                    containerBg = (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff)).withValues(alpha: 0.2);
+                    iconColor = isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be);
+                    break;
+                  case 'salary':
+                    containerBg = (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD)).withValues(alpha: 0.2);
+                    iconColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+                    break;
+                  case 'dining':
+                  default:
+                    containerBg = (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6)).withValues(alpha: 0.2);
+                    iconColor = isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
+                    break;
+                }
+
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: Insets.lg, vertical: 8),
+                  leading: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: containerBg,
+                      borderRadius: AppRadius.brMd,
+                    ),
+                    child: Icon(
+                      _categoryIcon(t.categoryIcon),
+                      color: iconColor,
+                      size: 22,
+                    ),
+                  ),
+                  title: Text(
+                    t.description,
+                    style: AppTypography.bodyMd.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                  subtitle: Text(
+                    FormatUtils.formatRelativeDate(t.date),
+                    style: AppTypography.bodySm.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(t.amount.abs())}',
+                        style: AppTypography.headlineSm.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isIncome 
+                            ? (isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD))
+                            : (isDark ? const Color(0xFFFFB4AB) : const Color(0xFFBA1A1A)),
+                        ),
+                      ),
+                      Text(
+                        t.category,
+                        style: AppTypography.labelMd.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
 
   IconData _categoryIcon(String iconName) {
-    switch (iconName) {
-      case 'food':
-        return Icons.restaurant_rounded;
-      case 'transport':
-        return Icons.directions_car_rounded;
-      case 'shopping':
-        return Icons.shopping_bag_rounded;
-      case 'entertainment':
-        return Icons.movie_rounded;
-      case 'bills':
-        return Icons.receipt_long_rounded;
-      case 'salary':
-        return Icons.work_rounded;
-      case 'freelance':
-        return Icons.code_rounded;
-      case 'investment':
-        return Icons.trending_up_rounded;
+    switch (iconName.toLowerCase()) {
+      case 'shopping_bag':
+      case 'shopping_cart':
+        return Icons.shopping_bag_outlined;
+      case 'work':
+        return Icons.work_outline;
+      case 'restaurant':
+      case 'dining':
+        return Icons.restaurant_outlined;
+      case 'coffee':
+        return Icons.coffee_outlined;
       default:
-        return Icons.circle_rounded;
+        return Icons.circle_outlined;
     }
-  }
-}
-
-class _MiniStatCard extends StatelessWidget {
-  final String label;
-  final double amount;
-  final LinearGradient gradient;
-
-  const _MiniStatCard({
-    required this.label,
-    required this.amount,
-    required this.gradient,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Insets.md),
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: AppRadius.brXl,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: AppTypography.bodySm.copyWith(
-              color: Colors.white.withValues(alpha: 0.8),
-            ),
-          ),
-          const SizedBox(height: Insets.sm),
-          Text(
-            FormatUtils.formatCurrency(amount),
-            style: AppTypography.labelMd.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickActionButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _QuickActionButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: AppRadius.brXl,
-              border: Border.all(
-                color: AppColors.outlineVariant.withValues(alpha: 0.3),
-              ),
-            ),
-            child: Icon(icon, color: AppColors.primary, size: 22),
-          ),
-          const SizedBox(height: Insets.xs),
-          Text(
-            label,
-            style: AppTypography.bodySm.copyWith(
-              color: AppColors.onSurfaceVariant,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
