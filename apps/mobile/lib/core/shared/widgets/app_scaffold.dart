@@ -36,9 +36,7 @@ class AppScaffold extends StatelessWidget {
       backgroundColor: bgColor,
       appBar: appBar,
       body: SafeArea(
-        child: padding != null
-            ? Padding(padding: padding!, child: body)
-            : body,
+        child: padding != null ? Padding(padding: padding!, child: body) : body,
       ),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

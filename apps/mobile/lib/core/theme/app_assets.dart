@@ -12,7 +12,7 @@ class AppAssets {
   // ──────────────────────────────────────────────
   // Theme Helpers
   // ──────────────────────────────────────────────
-  
+
   /// Returns the correct logo path based on the current context's theme brightness.
   static String logo(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;

@@ -14,8 +14,35 @@ class ProfileService {
     return user;
   }
 
+  async getProfileByEmail(email) {
+    return await userRepository.findByEmail(email);
+  }
+
+  async createProfile(userId, email, data) {
+    const existing = await userRepository.findById(userId);
+    if (existing) {
+      const error = new Error('Profile already exists.');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const user = await userRepository.create({
+      _id: userId,
+      email: email,
+      name: data.name,
+      title: data.title || '',
+      bio: data.bio || '',
+      location: data.location || '',
+      currency: data.currency || 'USD',
+      theme: data.theme || 'system',
+      avatar: data.avatar || { url: '', publicId: '' },
+    });
+
+    return user;
+  }
+
   async updateProfile(userId, data) {
-    const allowedFields = ['name', 'currency', 'theme', 'biometricEnabled'];
+    const allowedFields = ['name', 'currency', 'theme', 'biometricEnabled', 'title', 'bio', 'location'];
     const updates = {};
     for (const field of allowedFields) {
       if (data[field] !== undefined) {

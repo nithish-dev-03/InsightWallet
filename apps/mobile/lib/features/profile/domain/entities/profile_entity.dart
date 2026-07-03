@@ -13,6 +13,9 @@ class ProfileEntity with _$ProfileEntity {
     @Default('dark') String theme,
     @Default(false) bool emailVerified,
     @Default(false) bool biometricEnabled,
+    @Default('') String title,
+    @Default('') String bio,
+    @Default('') String location,
     required DateTime createdAt,
   }) = _ProfileEntity;
 

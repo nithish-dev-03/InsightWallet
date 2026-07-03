@@ -23,9 +23,26 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   String _selectedCurrency = 'USD';
 
   static const _currencies = [
-    'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY',
-    'INR', 'BRL', 'KRW', 'MXN', 'SGD', 'HKD', 'NZD', 'SEK',
-    'NGN', 'ZAR', 'TRY', 'RUB',
+    'USD',
+    'EUR',
+    'GBP',
+    'JPY',
+    'CAD',
+    'AUD',
+    'CHF',
+    'CNY',
+    'INR',
+    'BRL',
+    'KRW',
+    'MXN',
+    'SGD',
+    'HKD',
+    'NZD',
+    'SEK',
+    'NGN',
+    'ZAR',
+    'TRY',
+    'RUB',
   ];
 
   @override
@@ -168,9 +185,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     child: Text(
                       currency,
                       style: AppTypography.bodySm.copyWith(
-                        color: isSelected
-                            ? Colors.white
-                            : AppColors.darkOnSurface,
+                        color:
+                            isSelected ? Colors.white : AppColors.darkOnSurface,
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w400,
                       ),

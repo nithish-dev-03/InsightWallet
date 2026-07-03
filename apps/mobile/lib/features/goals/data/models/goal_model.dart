@@ -43,14 +43,20 @@ extension GoalModelX on GoalModel {
         targetAmount: targetAmount,
         currentAmount: currentAmount,
         deadline: deadline,
-        icon: IconData(iconCodePoint, fontFamily: 'MaterialIcons'),
+        icon: IconData(
+          // ignore: non_const_argument_for_const_parameter
+          iconCodePoint,
+          fontFamily: 'MaterialIcons',
+        ),
         color: Color(colorValue),
         status: _statusFromString(status),
-        milestones: milestones.map((m) => Milestone(
-              id: m.id,
-              title: m.title,
-              isCompleted: m.isCompleted,
-            )).toList(),
+        milestones: milestones
+            .map((m) => Milestone(
+                  id: m.id,
+                  title: m.title,
+                  isCompleted: m.isCompleted,
+                ))
+            .toList(),
       );
 
   static GoalStatus _statusFromString(String value) {

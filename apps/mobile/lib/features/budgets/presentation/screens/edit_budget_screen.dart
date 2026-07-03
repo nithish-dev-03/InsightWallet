@@ -281,8 +281,7 @@ class _EditBudgetScreenState extends ConsumerState<EditBudgetScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Notifications',
-                            style: AppTypography.bodyMd),
+                        Text('Notifications', style: AppTypography.bodyMd),
                         Text('Get alerts when nearing limit',
                             style: AppTypography.bodySm.copyWith(
                                 color: AppColors.darkOnSurfaceVariant)),

@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_assets.dart';
-import '../../../../core/theme/app_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/validators.dart';
 import '../../data/datasources/auth_datasource.dart';
@@ -65,8 +63,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     // Stitch design system tokens
     final bgColor = isDark ? const Color(0xFF15121B) : const Color(0xFFFCF8FF);
-    final surfaceColor =
-        isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
     final onSurface =
         isDark ? const Color(0xFFE8DFEE) : const Color(0xFF1B1B24);
     final onSurfaceVariant =
@@ -195,7 +191,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             ),
                             padding: const EdgeInsets.all(12),
                             child: Image.asset(
-                              AppAssets.logoOf(isDark),
+                              AppAssets.logoOf(true),
                               fit: BoxFit.contain,
                             ),
                           ),

@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../../../../core/services/storage_service.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -17,15 +19,18 @@ class AuthRepositoryImpl implements AuthRepository {
     final request = LoginRequest(email: email, password: password);
     final response = await _dataSource.login(request);
     await _saveTokens(response);
+    await _storage.saveEmail(response.user.email);
     return response.user.toEntity();
   }
 
   @override
   Future<UserEntity> register(
       String name, String email, String password) async {
-    final request = RegisterRequest(name: name, email: email, password: password);
+    final request =
+        RegisterRequest(name: name, email: email, password: password);
     final response = await _dataSource.register(request);
     await _saveTokens(response);
+    await _storage.saveEmail(response.user.email);
     return response.user.toEntity();
   }
 
@@ -41,6 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
     if (refreshToken == null) throw Exception('No refresh token available');
     final response = await _dataSource.refreshToken(refreshToken);
     await _saveTokens(response);
+    await _storage.saveEmail(response.user.email);
     return response.user.toEntity();
   }
 
@@ -62,16 +68,34 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity> getCurrentUser() async {
-    final data = await _dataSource.getCurrentUser();
-    return UserEntity(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      email: data['email'] ?? '',
-      avatar: data['avatar'],
-      currency: data['currency'] ?? 'USD',
-      theme: data['theme'] ?? 'dark',
-      emailVerified: data['emailVerified'] ?? false,
-    );
+    try {
+      final data = await _dataSource.getCurrentUser();
+      return UserEntity(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        email: data['email'] ?? '',
+        avatar: data['avatar'],
+        currency: data['currency'] ?? 'USD',
+        theme: data['theme'] ?? 'dark',
+        emailVerified: data['emailVerified'] ?? false,
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        final email = await _storage.getEmail() ?? '';
+        return UserEntity(
+          id: '',
+          name: '',
+          email: email,
+        );
+      }
+      rethrow;
+    } catch (e) {
+      final email = await _storage.getEmail();
+      if (email != null) {
+        return UserEntity(id: '', name: '', email: email);
+      }
+      rethrow;
+    }
   }
 
   Future<void> _saveTokens(AuthResponse response) async {

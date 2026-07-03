@@ -9,7 +9,7 @@ part 'user_model.g.dart';
 class UserModel with _$UserModel {
   const factory UserModel({
     required String id,
-    required String name,
+    @Default('') String name,
     required String email,
     String? avatar,
     @Default('USD') String currency,
@@ -17,8 +17,18 @@ class UserModel with _$UserModel {
     @Default(false) bool emailVerified,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    var avatarJson = json['avatar'];
+    String? avatarUrl;
+    if (avatarJson is Map) {
+      avatarUrl = avatarJson['url'] as String?;
+    } else if (avatarJson is String) {
+      avatarUrl = avatarJson;
+    }
+    final updatedJson = Map<String, dynamic>.from(json);
+    updatedJson['avatar'] = avatarUrl;
+    return _$UserModelFromJson(updatedJson);
+  }
 
   factory UserModel.fromEntity(UserEntity entity) => UserModel(
         id: entity.id,

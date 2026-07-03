@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import env from '../config/env.js';
-import User from '../models/User.js';
+import Auth from '../models/Auth.js';
 import { errorResponse } from '../utils/apiResponse.js';
 
 const auth = async (req, res, next) => {
@@ -13,13 +13,13 @@ const auth = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, env.jwtSecret);
 
-    const user = await User.findById(decoded.userId);
-    if (!user) {
+    const authRecord = await Auth.findById(decoded.userId);
+    if (!authRecord) {
       return errorResponse(res, 'User not found.', 401);
     }
 
-    req.user = user;
-    req.userId = user._id;
+    req.user = authRecord;
+    req.userId = authRecord._id;
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

@@ -11,6 +11,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/format_utils.dart';
 import '../../domain/entities/dashboard_entity.dart';
 import '../providers/dashboard_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -45,7 +46,11 @@ class DashboardScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            data: (data) => _DashboardContent(data: data),
+            data: (data) {
+              final currencySymbol = ref.watch(currencySymbolProvider);
+              return _DashboardContent(
+                  data: data, currencySymbol: currencySymbol);
+            },
           ),
         ),
       ),
@@ -55,8 +60,9 @@ class DashboardScreen extends ConsumerWidget {
 
 class _DashboardContent extends StatefulWidget {
   final DashboardEntity data;
+  final String currencySymbol;
 
-  const _DashboardContent({required this.data});
+  const _DashboardContent({required this.data, required this.currencySymbol});
 
   @override
   State<_DashboardContent> createState() => _DashboardContentState();
@@ -66,7 +72,8 @@ class _DashboardContentState extends State<_DashboardContent> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.fromLTRB(Insets.md, Insets.sm, Insets.md, Insets.xxl),
+      padding: const EdgeInsets.fromLTRB(
+          Insets.md, Insets.sm, Insets.md, Insets.xxl),
       children: [
         _buildAppBar(context),
         const SizedBox(height: Insets.md),
@@ -118,7 +125,9 @@ class _DashboardContentState extends State<_DashboardContent> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: isDark ? const Color(0xFFD2BBFF).withValues(alpha: 0.2) : const Color(0xFF3525CD).withValues(alpha: 0.2),
+              color: isDark
+                  ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
+                  : const Color(0xFF3525CD).withValues(alpha: 0.2),
               width: 2,
             ),
           ),
@@ -159,9 +168,12 @@ class _DashboardContentState extends State<_DashboardContent> {
   }
 
   Widget _buildBalanceCard(BuildContext context) {
-    final balanceText = FormatUtils.formatCurrency(widget.data.balance);
-    final dollarPart = balanceText.substring(0, balanceText.indexOf('.'));
-    final centsPart = balanceText.substring(balanceText.indexOf('.'));
+    final balanceText = FormatUtils.formatCurrency(widget.data.balance,
+        currencySymbol: widget.currencySymbol);
+    final dotIndex = balanceText.indexOf('.');
+    final dollarPart =
+        dotIndex != -1 ? balanceText.substring(0, dotIndex) : balanceText;
+    final centsPart = dotIndex != -1 ? balanceText.substring(dotIndex) : '';
 
     return Container(
       padding: const EdgeInsets.all(Insets.lg),
@@ -259,7 +271,9 @@ class _DashboardContentState extends State<_DashboardContent> {
                               ),
                             ),
                             Text(
-                              FormatUtils.formatCurrency(widget.data.monthlyIncome),
+                              FormatUtils.formatCurrency(
+                                  widget.data.monthlyIncome,
+                                  currencySymbol: widget.currencySymbol),
                               style: AppTypography.bodyMd.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -297,7 +311,9 @@ class _DashboardContentState extends State<_DashboardContent> {
                               ),
                             ),
                             Text(
-                              FormatUtils.formatCurrency(widget.data.monthlyExpense),
+                              FormatUtils.formatCurrency(
+                                  widget.data.monthlyExpense,
+                                  currencySymbol: widget.currencySymbol),
                               style: AppTypography.bodyMd.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -327,7 +343,8 @@ class _DashboardContentState extends State<_DashboardContent> {
           icon: Icons.add,
           label: 'Add Transaction',
           iconColor: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
-          bgColor: (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD)).withValues(alpha: 0.2),
+          bgColor: (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD))
+              .withValues(alpha: 0.2),
           onTap: () {},
         ),
         const SizedBox(height: Insets.sm),
@@ -336,7 +353,8 @@ class _DashboardContentState extends State<_DashboardContent> {
           icon: Icons.document_scanner_outlined,
           label: 'Scan Receipt',
           iconColor: isDark ? const Color(0xFFFFB784) : const Color(0xFF713700),
-          bgColor: (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6)).withValues(alpha: 0.25),
+          bgColor: (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6))
+              .withValues(alpha: 0.25),
           onTap: () {},
         ),
         const SizedBox(height: Insets.sm),
@@ -345,7 +363,8 @@ class _DashboardContentState extends State<_DashboardContent> {
           icon: Icons.sync_alt,
           label: 'Transfer Funds',
           iconColor: isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be),
-          bgColor: (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff)).withValues(alpha: 0.25),
+          bgColor: (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff))
+              .withValues(alpha: 0.25),
           onTap: () {},
         ),
       ],
@@ -361,7 +380,8 @@ class _DashboardContentState extends State<_DashboardContent> {
     required VoidCallback onTap,
   }) {
     return GlassCard(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: Insets.md),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Insets.md, vertical: Insets.md),
       onTap: onTap,
       child: Row(
         children: [
@@ -390,7 +410,10 @@ class _DashboardContentState extends State<_DashboardContent> {
           const Spacer(),
           Icon(
             Icons.chevron_right,
-            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            color: Theme.of(context)
+                .colorScheme
+                .onSurfaceVariant
+                .withValues(alpha: 0.5),
             size: 20,
           ),
         ],
@@ -400,7 +423,8 @@ class _DashboardContentState extends State<_DashboardContent> {
 
   Widget _buildWeeklySpendingChart(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final primaryColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
 
     return GlassCard(
       padding: const EdgeInsets.all(Insets.lg),
@@ -410,15 +434,20 @@ class _DashboardContentState extends State<_DashboardContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Weekly Spending',
-                style: AppTypography.headlineSm.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
+              Expanded(
+                child: Text(
+                  'Weekly Spending',
+                  style: AppTypography.headlineSm.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: primaryColor.withValues(alpha: 0.15),
                   borderRadius: AppRadius.brFull,
@@ -454,13 +483,23 @@ class _DashboardContentState extends State<_DashboardContent> {
                       showTitles: true,
                       reservedSize: 22,
                       getTitlesWidget: (value, meta) {
-                        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        const days = [
+                          'Mon',
+                          'Tue',
+                          'Wed',
+                          'Thu',
+                          'Fri',
+                          'Sat',
+                          'Sun'
+                        ];
                         final index = value.toInt();
                         if (index >= 0 && index < days.length) {
                           return Text(
                             days[index],
                             style: AppTypography.labelMd.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
                             ),
                           );
                         }
@@ -494,7 +533,11 @@ class _DashboardContentState extends State<_DashboardContent> {
                         strokeWidth: 0,
                       ),
                       checkToShowDot: (spot, barData) {
-                        return spot.x == 1 || spot.x == 3 || spot.x == 4 || spot.x == 5 || spot.x == 6;
+                        return spot.x == 1 ||
+                            spot.x == 3 ||
+                            spot.x == 4 ||
+                            spot.x == 5 ||
+                            spot.x == 6;
                       },
                     ),
                     belowBarData: BarAreaData(
@@ -520,9 +563,12 @@ class _DashboardContentState extends State<_DashboardContent> {
 
   Widget _buildMonthlyBudget(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
-    final secondaryColor = isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be);
-    final tertiaryColor = isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
+    final primaryColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final secondaryColor =
+        isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be);
+    final tertiaryColor =
+        isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
 
     return GlassCard(
       padding: const EdgeInsets.all(Insets.lg),
@@ -609,7 +655,7 @@ class _DashboardContentState extends State<_DashboardContent> {
               ),
             ),
             Text(
-              '${FormatUtils.formatCurrency(spent)} / ${FormatUtils.formatCurrency(total)}',
+              '${FormatUtils.formatCurrency(spent, currencySymbol: widget.currencySymbol)} / ${FormatUtils.formatCurrency(total, currencySymbol: widget.currencySymbol)}',
               style: AppTypography.labelMd.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -622,7 +668,10 @@ class _DashboardContentState extends State<_DashboardContent> {
           child: Container(
             height: 8,
             width: double.infinity,
-            color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            color: Theme.of(context)
+                .colorScheme
+                .surfaceContainerHighest
+                .withValues(alpha: 0.3),
             child: Align(
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
@@ -674,7 +723,10 @@ class _DashboardContentState extends State<_DashboardContent> {
           ),
           Container(
             height: 1,
-            color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.1),
+            color: Theme.of(context)
+                .colorScheme
+                .outlineVariant
+                .withValues(alpha: 0.1),
           ),
           if (transactions.isEmpty)
             const Padding(
@@ -688,7 +740,10 @@ class _DashboardContentState extends State<_DashboardContent> {
               itemCount: transactions.length,
               separatorBuilder: (context, index) => Container(
                 height: 1,
-                color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.1),
+                color: Theme.of(context)
+                    .colorScheme
+                    .outlineVariant
+                    .withValues(alpha: 0.1),
               ),
               itemBuilder: (context, index) {
                 final t = transactions[index];
@@ -700,22 +755,38 @@ class _DashboardContentState extends State<_DashboardContent> {
 
                 switch (t.category.toLowerCase()) {
                   case 'technology':
-                    containerBg = (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff)).withValues(alpha: 0.2);
-                    iconColor = isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be);
+                    containerBg = (isDark
+                            ? const Color(0xFF571BC1)
+                            : const Color(0xFFe9ddff))
+                        .withValues(alpha: 0.2);
+                    iconColor = isDark
+                        ? const Color(0xFFD0BCFF)
+                        : const Color(0xFF5516be);
                     break;
                   case 'salary':
-                    containerBg = (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD)).withValues(alpha: 0.2);
-                    iconColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+                    containerBg = (isDark
+                            ? const Color(0xFF7C3AED)
+                            : const Color(0xFF3525CD))
+                        .withValues(alpha: 0.2);
+                    iconColor = isDark
+                        ? const Color(0xFFD2BBFF)
+                        : const Color(0xFF3525CD);
                     break;
                   case 'dining':
                   default:
-                    containerBg = (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6)).withValues(alpha: 0.2);
-                    iconColor = isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
+                    containerBg = (isDark
+                            ? const Color(0xFFa15100)
+                            : const Color(0xFFffdcc6))
+                        .withValues(alpha: 0.2);
+                    iconColor = isDark
+                        ? const Color(0xFFFFB784)
+                        : const Color(0xFF713700);
                     break;
                 }
 
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: Insets.lg, vertical: 8),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: Insets.lg, vertical: 8),
                   leading: Container(
                     width: 44,
                     height: 44,
@@ -747,13 +818,17 @@ class _DashboardContentState extends State<_DashboardContent> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(t.amount.abs())}',
+                        '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(t.amount.abs(), currencySymbol: widget.currencySymbol)}',
                         style: AppTypography.headlineSm.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: isIncome 
-                            ? (isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD))
-                            : (isDark ? const Color(0xFFFFB4AB) : const Color(0xFFBA1A1A)),
+                          color: isIncome
+                              ? (isDark
+                                  ? const Color(0xFFD2BBFF)
+                                  : const Color(0xFF3525CD))
+                              : (isDark
+                                  ? const Color(0xFFFFB4AB)
+                                  : const Color(0xFFBA1A1A)),
                         ),
                       ),
                       Text(

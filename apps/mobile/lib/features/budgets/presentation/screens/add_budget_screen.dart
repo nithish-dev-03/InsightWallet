@@ -215,7 +215,8 @@ class _AddBudgetScreenState extends ConsumerState<AddBudgetScreen> {
                         value: BudgetPeriod.yearly, label: Text('Yearly')),
                   ],
                   selected: {_period},
-                  onSelectionChanged: (set) => setState(() => _period = set.first),
+                  onSelectionChanged: (set) =>
+                      setState(() => _period = set.first),
                 ),
               ),
               const SizedBox(height: Insets.md),
@@ -274,8 +275,7 @@ class _AddBudgetScreenState extends ConsumerState<AddBudgetScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Notifications',
-                            style: AppTypography.bodyMd),
+                        Text('Notifications', style: AppTypography.bodyMd),
                         Text('Get alerts when nearing limit',
                             style: AppTypography.bodySm.copyWith(
                                 color: AppColors.darkOnSurfaceVariant)),

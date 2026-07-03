@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:insightwallet/features/auth/presentation/screens/splash_screen.dart';
@@ -14,7 +15,12 @@ import 'package:insightwallet/features/dashboard/presentation/screens/dashboard_
 import 'package:insightwallet/features/transactions/presentation/screens/transaction_list_screen.dart';
 import 'package:insightwallet/features/reports/presentation/screens/reports_screen.dart';
 import 'package:insightwallet/features/profile/presentation/screens/profile_screen.dart';
+import 'package:insightwallet/features/profile/presentation/screens/profile_setup_screen.dart';
 import 'package:insightwallet/features/notifications/presentation/screens/notification_list_screen.dart';
+
+final routerProvider = Provider<GoRouter>((ref) {
+  return AppRouter.create();
+});
 
 // ── Shell Scaffold with Bottom Navigation ──
 class _MainShell extends StatelessWidget {
@@ -84,8 +90,10 @@ class AppRouter {
   AppRouter._();
 
   static bool _isAuthenticated = false;
+  static bool _needsProfileSetup = false;
 
   static void setAuthenticated(bool value) => _isAuthenticated = value;
+  static void setNeedsProfileSetup(bool value) => _needsProfileSetup = value;
 
   static GoRouter create() {
     return GoRouter(
@@ -107,12 +115,16 @@ class AppRouter {
           path: '/auth/login',
           name: 'login',
           builder: (_, __) => const LoginScreen(),
-          // builder: (_, __) => const DashboardScreen(),
         ),
         GoRoute(
           path: '/auth/register',
           name: 'register',
           builder: (_, __) => const RegisterScreen(),
+        ),
+        GoRoute(
+          path: '/auth/profile-setup',
+          name: 'profile-setup',
+          builder: (_, __) => const ProfileSetupScreen(),
         ),
         GoRoute(
           path: '/auth/forgot-password',
@@ -169,10 +181,12 @@ class AppRouter {
     );
   }
 
-  static FutureOr<String?> _authGuard(BuildContext context, GoRouterState state) {
+  static FutureOr<String?> _authGuard(
+      BuildContext context, GoRouterState state) {
     final isAuthRoute = state.matchedLocation.startsWith('/auth');
     final isSplash = state.matchedLocation == '/splash';
     final isOnboarding = state.matchedLocation == '/onboarding';
+    final isProfileSetup = state.matchedLocation == '/auth/profile-setup';
 
     if (isSplash) return null;
 
@@ -181,8 +195,14 @@ class AppRouter {
         return '/auth/login';
       }
     } else {
-      if (isAuthRoute) {
-        return '/dashboard';
+      if (_needsProfileSetup) {
+        if (!isProfileSetup) {
+          return '/auth/profile-setup';
+        }
+      } else {
+        if (isAuthRoute || isProfileSetup) {
+          return '/dashboard';
+        }
       }
     }
 

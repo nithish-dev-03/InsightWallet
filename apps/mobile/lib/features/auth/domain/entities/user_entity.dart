@@ -6,7 +6,7 @@ part 'user_entity.freezed.dart';
 class UserEntity with _$UserEntity {
   const factory UserEntity({
     required String id,
-    required String name,
+    @Default('') String name,
     required String email,
     String? avatar,
     @Default('USD') String currency,

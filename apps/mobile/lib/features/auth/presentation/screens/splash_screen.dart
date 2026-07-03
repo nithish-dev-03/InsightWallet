@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/storage_service.dart';
@@ -11,15 +12,16 @@ import '../../../../core/theme/app_assets.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/router/app_router.dart';
+import '../providers/auth_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -36,8 +38,20 @@ class _SplashScreenState extends State<SplashScreen> {
     if (hasOnboarded != 'true') {
       context.go('/onboarding');
     } else if (hasToken != null) {
-      AppRouter.setAuthenticated(true);
-      context.go('/dashboard');
+      try {
+        final repository = ref.read(authRepositoryProvider);
+        final user = await repository.getCurrentUser();
+        AppRouter.setAuthenticated(true);
+        if (user.name.isEmpty) {
+          AppRouter.setNeedsProfileSetup(true);
+          context.go('/auth/profile-setup');
+        } else {
+          AppRouter.setNeedsProfileSetup(false);
+          context.go('/dashboard');
+        }
+      } catch (_) {
+        context.go('/auth/login');
+      }
     } else {
       context.go('/auth/login');
     }
@@ -144,7 +158,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: Text(
                         'Track smarter. Spend wiser.',
                         style: AppTypography.bodyLg.copyWith(
-                          color: AppColors.darkOnSurfaceVariant.withValues(alpha: 0.8),
+                          color: AppColors.darkOnSurfaceVariant
+                              .withValues(alpha: 0.8),
                         ),
                       ),
                     ),
@@ -227,7 +242,8 @@ class _FloatingOrb extends StatefulWidget {
   State<_FloatingOrb> createState() => _FloatingOrbState();
 }
 
-class _FloatingOrbState extends State<_FloatingOrb> with SingleTickerProviderStateMixin {
+class _FloatingOrbState extends State<_FloatingOrb>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<Offset> _translationAnimation;
@@ -243,30 +259,39 @@ class _FloatingOrbState extends State<_FloatingOrb> with SingleTickerProviderSta
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.1).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(begin: 1.0, end: 1.1)
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 33,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.1, end: 0.9).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(begin: 1.1, end: 0.9)
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 33,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 0.9, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<double>(begin: 0.9, end: 1.0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 34,
       ),
     ]).animate(_controller);
 
     _translationAnimation = TweenSequence<Offset>([
       TweenSequenceItem(
-        tween: Tween<Offset>(begin: const Offset(0.0, 0.0), end: const Offset(0.1, -0.1)).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<Offset>(
+                begin: const Offset(0.0, 0.0), end: const Offset(0.1, -0.1))
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 33,
       ),
       TweenSequenceItem(
-        tween: Tween<Offset>(begin: const Offset(0.1, -0.1), end: const Offset(-0.05, 0.15)).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<Offset>(
+                begin: const Offset(0.1, -0.1), end: const Offset(-0.05, 0.15))
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 33,
       ),
       TweenSequenceItem(
-        tween: Tween<Offset>(begin: const Offset(-0.05, 0.15), end: const Offset(0.0, 0.0)).chain(CurveTween(curve: Curves.easeInOut)),
+        tween: Tween<Offset>(
+                begin: const Offset(-0.05, 0.15), end: const Offset(0.0, 0.0))
+            .chain(CurveTween(curve: Curves.easeInOut)),
         weight: 34,
       ),
     ]).animate(_controller);
@@ -322,7 +347,8 @@ class _LogoWithGlow extends StatefulWidget {
   State<_LogoWithGlow> createState() => _LogoWithGlowState();
 }
 
-class _LogoWithGlowState extends State<_LogoWithGlow> with SingleTickerProviderStateMixin {
+class _LogoWithGlowState extends State<_LogoWithGlow>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _opacityAnimation;
@@ -398,7 +424,7 @@ class _LogoWithGlowState extends State<_LogoWithGlow> with SingleTickerProviderS
               ],
             ),
             child: Image.asset(
-              AppAssets.logo(context),
+              AppAssets.logoOf(true),
               fit: BoxFit.contain,
             ),
           ),
@@ -415,7 +441,8 @@ class _LoadingProgressBar extends StatefulWidget {
   State<_LoadingProgressBar> createState() => _LoadingProgressBarState();
 }
 
-class _LoadingProgressBarState extends State<_LoadingProgressBar> with SingleTickerProviderStateMixin {
+class _LoadingProgressBarState extends State<_LoadingProgressBar>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _progressAnimation;
 
@@ -512,7 +539,8 @@ class _ParticleLayer extends StatefulWidget {
   State<_ParticleLayer> createState() => _ParticleLayerState();
 }
 
-class _ParticleLayerState extends State<_ParticleLayer> with SingleTickerProviderStateMixin {
+class _ParticleLayerState extends State<_ParticleLayer>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   final List<_Particle> _particles = [];
   bool _initialized = false;
@@ -601,19 +629,18 @@ class _ParticlePainter extends CustomPainter {
 class _FadeInUp extends StatefulWidget {
   final Widget child;
   final Duration delay;
-  final Duration duration;
 
   const _FadeInUp({
     required this.child,
     required this.delay,
-    this.duration = const Duration(milliseconds: 1200),
   });
 
   @override
   State<_FadeInUp> createState() => _FadeInUpState();
 }
 
-class _FadeInUpState extends State<_FadeInUp> with SingleTickerProviderStateMixin {
+class _FadeInUpState extends State<_FadeInUp>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _opacity;
   late final Animation<double> _translate;
@@ -623,7 +650,7 @@ class _FadeInUpState extends State<_FadeInUp> with SingleTickerProviderStateMixi
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: const Duration(milliseconds: 1200),
     );
 
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(

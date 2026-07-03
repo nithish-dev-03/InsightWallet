@@ -17,7 +17,8 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
   const AddTransactionScreen({super.key});
 
   @override
-  ConsumerState<AddTransactionScreen> createState() => _AddTransactionScreenState();
+  ConsumerState<AddTransactionScreen> createState() =>
+      _AddTransactionScreenState();
 }
 
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
@@ -96,7 +97,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         'category': _selectedCategory,
         'description': _descriptionController.text.trim(),
         'date': _selectedDate.toIso8601String(),
-        if (_noteController.text.isNotEmpty) 'note': _noteController.text.trim(),
+        if (_noteController.text.isNotEmpty)
+          'note': _noteController.text.trim(),
         if (tags.isNotEmpty) 'tags': tags,
       }).future);
 
@@ -176,7 +178,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 ),
               ),
               const SizedBox(height: Insets.lg),
-              Text('Category', style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant)),
+              Text('Category',
+                  style: AppTypography.bodyMd
+                      .copyWith(color: AppColors.onSurfaceVariant)),
               const SizedBox(height: Insets.sm),
               _buildCategoryGrid(),
               const SizedBox(height: Insets.lg),
@@ -217,7 +221,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                 ),
               ),
               const SizedBox(height: Insets.lg),
-              Text('Receipt', style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant)),
+              Text('Receipt',
+                  style: AppTypography.bodyMd
+                      .copyWith(color: AppColors.onSurfaceVariant)),
               const SizedBox(height: Insets.sm),
               GlassCard(
                 onTap: _pickReceipt,
@@ -373,7 +379,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   child: Icon(
                     icon,
                     size: 22,
-                    color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -381,7 +389,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
                   label,
                   style: AppTypography.bodySm.copyWith(
                     fontSize: 11,
-                    color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

@@ -51,13 +51,15 @@ class BudgetsNotifier extends AsyncNotifier<List<BudgetEntity>> {
 
   double get totalBudgeted {
     return state.whenOrNull(data: (list) {
-      return list.fold<double>(0, (sum, b) => sum + b.amount);
-    }) ?? 0;
+          return list.fold<double>(0, (sum, b) => sum + b.amount);
+        }) ??
+        0;
   }
 
   double get totalSpent {
     return state.whenOrNull(data: (list) {
-      return list.fold<double>(0, (sum, b) => sum + b.spent);
-    }) ?? 0;
+          return list.fold<double>(0, (sum, b) => sum + b.spent);
+        }) ??
+        0;
   }
 }

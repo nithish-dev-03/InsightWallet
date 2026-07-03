@@ -174,7 +174,7 @@ class __$$UserEntityImplCopyWithImpl<$Res>
 class _$UserEntityImpl implements _UserEntity {
   const _$UserEntityImpl(
       {required this.id,
-      required this.name,
+      this.name = '',
       required this.email,
       this.avatar,
       this.currency = 'USD',
@@ -184,6 +184,7 @@ class _$UserEntityImpl implements _UserEntity {
   @override
   final String id;
   @override
+  @JsonKey()
   final String name;
   @override
   final String email;
@@ -234,7 +235,7 @@ class _$UserEntityImpl implements _UserEntity {
 abstract class _UserEntity implements UserEntity {
   const factory _UserEntity(
       {required final String id,
-      required final String name,
+      final String name,
       required final String email,
       final String? avatar,
       final String currency,

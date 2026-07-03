@@ -20,7 +20,8 @@ class EditTransactionScreen extends ConsumerStatefulWidget {
   const EditTransactionScreen({super.key, required this.transaction});
 
   @override
-  ConsumerState<EditTransactionScreen> createState() => _EditTransactionScreenState();
+  ConsumerState<EditTransactionScreen> createState() =>
+      _EditTransactionScreenState();
 }
 
 class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
@@ -60,7 +61,8 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
         TextEditingController(text: widget.transaction.amount.toString());
     _descriptionController =
         TextEditingController(text: widget.transaction.description);
-    _noteController = TextEditingController(text: widget.transaction.note ?? '');
+    _noteController =
+        TextEditingController(text: widget.transaction.note ?? '');
     _tagsController = TextEditingController(
       text: widget.transaction.tags?.join(', ') ?? '',
     );
@@ -117,7 +119,8 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
           'category': _selectedCategory,
           'description': _descriptionController.text.trim(),
           'date': _selectedDate.toIso8601String(),
-          if (_noteController.text.isNotEmpty) 'note': _noteController.text.trim(),
+          if (_noteController.text.isNotEmpty)
+            'note': _noteController.text.trim(),
           if (tags.isNotEmpty) 'tags': tags,
         },
       )).future);
@@ -252,20 +255,24 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                 child: Row(
                   children: [
                     Icon(
-                      _receiptPath != null || widget.transaction.receiptUrl != null
+                      _receiptPath != null ||
+                              widget.transaction.receiptUrl != null
                           ? Icons.check_circle_rounded
                           : Icons.add_photo_alternate_outlined,
-                      color: _receiptPath != null || widget.transaction.receiptUrl != null
+                      color: _receiptPath != null ||
+                              widget.transaction.receiptUrl != null
                           ? AppColors.success
                           : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: Insets.sm),
                     Text(
-                      _receiptPath != null || widget.transaction.receiptUrl != null
+                      _receiptPath != null ||
+                              widget.transaction.receiptUrl != null
                           ? 'Receipt selected'
                           : 'Tap to add receipt image',
                       style: AppTypography.bodyMd.copyWith(
-                        color: _receiptPath != null || widget.transaction.receiptUrl != null
+                        color: _receiptPath != null ||
+                                widget.transaction.receiptUrl != null
                             ? Theme.of(context).colorScheme.onSurface
                             : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -401,7 +408,9 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                   child: Icon(
                     icon,
                     size: 22,
-                    color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -409,7 +418,9 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                   label,
                   style: AppTypography.bodySm.copyWith(
                     fontSize: 11,
-                    color: selected ? AppColors.primary : AppColors.onSurfaceVariant,
+                    color: selected
+                        ? AppColors.primary
+                        : AppColors.onSurfaceVariant,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

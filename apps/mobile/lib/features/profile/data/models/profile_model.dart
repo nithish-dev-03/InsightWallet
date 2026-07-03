@@ -16,11 +16,24 @@ class ProfileModel with _$ProfileModel {
     @Default('dark') String theme,
     @Default(false) bool emailVerified,
     @Default(false) bool biometricEnabled,
+    @Default('') String title,
+    @Default('') String bio,
+    @Default('') String location,
     required DateTime createdAt,
   }) = _ProfileModel;
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) =>
-      _$ProfileModelFromJson(json);
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    var avatarJson = json['avatar'];
+    String? avatarUrl;
+    if (avatarJson is Map) {
+      avatarUrl = avatarJson['url'] as String?;
+    } else if (avatarJson is String) {
+      avatarUrl = avatarJson;
+    }
+    final updatedJson = Map<String, dynamic>.from(json);
+    updatedJson['avatar'] = avatarUrl;
+    return _$ProfileModelFromJson(updatedJson);
+  }
 
   factory ProfileModel.fromEntity(ProfileEntity entity) => ProfileModel(
         id: entity.id,
@@ -31,6 +44,9 @@ class ProfileModel with _$ProfileModel {
         theme: entity.theme,
         emailVerified: entity.emailVerified,
         biometricEnabled: entity.biometricEnabled,
+        title: entity.title,
+        bio: entity.bio,
+        location: entity.location,
         createdAt: entity.createdAt,
       );
 }
@@ -45,6 +61,9 @@ extension ProfileModelX on ProfileModel {
         theme: theme,
         emailVerified: emailVerified,
         biometricEnabled: biometricEnabled,
+        title: title,
+        bio: bio,
+        location: location,
         createdAt: createdAt,
       );
 }

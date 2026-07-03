@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/services/storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_assets.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../widgets/auth_widgets.dart';
@@ -18,7 +17,8 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with TickerProviderStateMixin {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -29,7 +29,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   static final _slides = [
     _OnboardingSlideData(
       title: 'Track Your Wealth',
-      description: 'Automatically categorize and monitor your spending with intelligent insights.',
+      description:
+          'Automatically categorize and monitor your spending with intelligent insights.',
       mainIcon: Icons.trending_up_rounded,
       floatIconTopRight: Icons.trending_up_rounded,
       floatIconBottomLeft: Icons.pie_chart_rounded,
@@ -60,7 +61,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     ),
     _OnboardingSlideData(
       title: 'Analyze Spending',
-      description: 'Visualize your expenses with beautiful charts and understand where your money goes.',
+      description:
+          'Visualize your expenses with beautiful charts and understand where your money goes.',
       mainIcon: Icons.pie_chart_rounded,
       floatIconTopRight: Icons.insights_rounded,
       floatIconBottomLeft: Icons.donut_large_rounded,
@@ -91,7 +93,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     ),
     _OnboardingSlideData(
       title: 'Achieve Goals',
-      description: 'Set savings goals, create budgets, and let AI help you make smarter financial decisions.',
+      description:
+          'Set savings goals, create budgets, and let AI help you make smarter financial decisions.',
       mainIcon: Icons.flag_rounded,
       floatIconTopRight: Icons.stars_rounded,
       floatIconBottomLeft: Icons.workspace_premium_rounded,
@@ -141,7 +144,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   void _onNext() {
     if (_currentPage < _slides.length - 1) {
-      _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     } else {
       _completeOnboarding();
     }
@@ -215,7 +219,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               children: [
                 // Header: Logo + Title + Skip Button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -227,7 +232,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             height: 32,
                             width: 32,
                             fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) => const SizedBox(width: 32, height: 32),
+                            errorBuilder: (context, error, stackTrace) =>
+                                const SizedBox(width: 32, height: 32),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -244,11 +250,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       InteractiveButton(
                         onTap: _skip,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           child: Text(
                             'SKIP',
                             style: AppTypography.labelMd.copyWith(
-                              color: AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                              color: AppColors.onSurfaceVariant
+                                  .withValues(alpha: 0.7),
                               fontWeight: FontWeight.w600,
                               letterSpacing: 1.5,
                             ),
@@ -262,7 +270,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    onPageChanged: (index) => setState(() => _currentPage = index),
+                    onPageChanged: (index) =>
+                        setState(() => _currentPage = index),
                     itemCount: _slides.length,
                     itemBuilder: (context, index) {
                       final slide = _slides[index];
@@ -303,18 +312,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             borderRadius: AppRadius.brLg,
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primaryContainer.withValues(alpha: 0.3),
+                                color: AppColors.primaryContainer
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 12,
                                 offset: const Offset(0, 4),
                               ),
                             ],
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 14),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                _currentPage == _slides.length - 1 ? 'Get Started' : 'Next',
+                                _currentPage == _slides.length - 1
+                                    ? 'Get Started'
+                                    : 'Next',
                                 style: AppTypography.headlineSm.copyWith(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -382,7 +395,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                               children: slide.mockTransactions.map((tx) {
                                 return Container(
                                   height: 48,
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   decoration: BoxDecoration(
                                     color: tx.bgColor,
                                     borderRadius: AppRadius.brLg,
@@ -394,7 +408,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                         width: 28,
                                         height: 28,
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha: 0.05),
+                                          color: Colors.white
+                                              .withValues(alpha: 0.05),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
@@ -413,7 +428,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                             child: Container(
                                               height: 8,
                                               decoration: BoxDecoration(
-                                                color: tx.color.withValues(alpha: 0.15),
+                                                color: tx.color
+                                                    .withValues(alpha: 0.15),
                                                 borderRadius: AppRadius.brFull,
                                               ),
                                             ),
@@ -442,7 +458,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                 child: AnimatedBuilder(
                                   animation: _floatingController,
                                   builder: (context, _) {
-                                    final pulseVal = 0.3 + 0.7 * _floatingController.value;
+                                    final pulseVal =
+                                        0.3 + 0.7 * _floatingController.value;
                                     return Opacity(
                                       opacity: pulseVal,
                                       child: Container(
@@ -453,7 +470,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: AppColors.primary.withValues(alpha: 0.6),
+                                              color: AppColors.primary
+                                                  .withValues(alpha: 0.6),
                                               blurRadius: 8,
                                               spreadRadius: 2,
                                             ),

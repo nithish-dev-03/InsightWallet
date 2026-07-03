@@ -15,12 +15,14 @@ import '../../data/models/transaction_filter.dart';
 import '../../domain/entities/transaction_entity.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/transaction_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
 
   @override
-  ConsumerState<TransactionListScreen> createState() => _TransactionListScreenState();
+  ConsumerState<TransactionListScreen> createState() =>
+      _TransactionListScreenState();
 }
 
 class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
@@ -61,10 +63,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   void _applyFilter(String categoryName) {
     setState(() => _selectedCategory = categoryName);
     ref.read(transactionListProvider.notifier).applyFilter(
-      TransactionFilter(
-        category: categoryName == 'All' ? null : categoryName.toLowerCase(),
-      ),
-    );
+          TransactionFilter(
+            category: categoryName == 'All' ? null : categoryName.toLowerCase(),
+          ),
+        );
   }
 
   @override
@@ -74,8 +76,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
     final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final textPrimary = isDark ? Colors.white : AppColors.lightOnSurface;
-    final textSecondary = isDark ? AppColors.darkOnSurfaceVariant : AppColors.lightOnSurfaceVariant;
-    final chipBgColor = isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
+    final textSecondary = isDark
+        ? AppColors.darkOnSurfaceVariant
+        : AppColors.lightOnSurfaceVariant;
+    final chipBgColor =
+        isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -96,11 +101,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     children: [
                       Text(
                         'Failed to load transactions',
-                        style: AppTypography.bodyMd.copyWith(color: textSecondary),
+                        style:
+                            AppTypography.bodyMd.copyWith(color: textSecondary),
                       ),
                       const SizedBox(height: Insets.md),
                       FilledButton(
-                        onPressed: () => ref.invalidate(transactionListProvider),
+                        onPressed: () =>
+                            ref.invalidate(transactionListProvider),
                         child: const Text('Retry'),
                       ),
                     ],
@@ -117,7 +124,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
                   return RefreshIndicator(
                     color: Theme.of(context).colorScheme.primary,
-                    onRefresh: () => ref.read(transactionListProvider.notifier).refresh(),
+                    onRefresh: () =>
+                        ref.read(transactionListProvider.notifier).refresh(),
                     child: ListView(
                       controller: _scrollController,
                       padding: const EdgeInsets.only(
@@ -128,7 +136,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       children: [
                         _buildMonthlyInsightsCard(context, isDark),
                         const SizedBox(height: Insets.lg),
-                        ..._buildGroupedTransactionList(context, transactions),
+                        ..._buildGroupedTransactionList(context, transactions,
+                            ref.watch(currencySymbolProvider)),
                         const SizedBox(height: Insets.md),
                       ],
                     ),
@@ -142,9 +151,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     );
   }
 
-  Widget _buildStitchHeader(BuildContext context, bool isDark, Color textPrimary, Color textSecondary) {
+  Widget _buildStitchHeader(BuildContext context, bool isDark,
+      Color textPrimary, Color textSecondary) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Insets.md, Insets.md, Insets.md, Insets.xs),
+      padding:
+          const EdgeInsets.fromLTRB(Insets.md, Insets.md, Insets.md, Insets.xs),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -156,7 +167,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   IconButton(
                     icon: Icon(
                       Icons.menu,
-                      color: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
+                      color: isDark
+                          ? const Color(0xFFD2BBFF)
+                          : const Color(0xFF3525CD),
                     ),
                     onPressed: () {},
                     padding: EdgeInsets.zero,
@@ -186,7 +199,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isDark ? const Color(0xFFD2BBFF).withValues(alpha: 0.2) : const Color(0xFF3525CD).withValues(alpha: 0.2),
+                        color: isDark
+                            ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
+                            : const Color(0xFF3525CD).withValues(alpha: 0.2),
                         width: 2,
                       ),
                     ),
@@ -214,7 +229,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           ),
           const SizedBox(height: 2),
           Text(
-            'October Spending: \$2,450.00',
+            'October Spending: ${ref.watch(currencySymbolProvider)}2,450.00',
             style: AppTypography.bodyMd.copyWith(
               color: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
               fontWeight: FontWeight.w600,
@@ -227,14 +242,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
   Widget _buildSearchAndActionsRow(BuildContext context, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: Insets.sm),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Insets.md, vertical: Insets.sm),
       child: Row(
         children: [
           Expanded(
             child: Container(
               height: 48,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1D1A24) : const Color(0xFFF0ECF9),
+                color:
+                    isDark ? const Color(0xFF1D1A24) : const Color(0xFFF0ECF9),
                 borderRadius: AppRadius.brMd,
               ),
               child: TextField(
@@ -248,11 +265,17 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 decoration: InputDecoration(
                   hintText: 'Search merchants, amounts...',
                   hintStyle: AppTypography.bodyMd.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withValues(alpha: 0.5),
                   ),
                   prefixIcon: Icon(
                     Icons.search_rounded,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withValues(alpha: 0.7),
                   ),
                   border: InputBorder.none,
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
@@ -286,8 +309,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     );
   }
 
-  Widget _buildFilterChips(BuildContext context, bool isDark, Color chipBgColor) {
-    final activeColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+  Widget _buildFilterChips(
+      BuildContext context, bool isDark, Color chipBgColor) {
+    final activeColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
     final activeTextColor = isDark ? const Color(0xFF3F008E) : Colors.white;
 
     return Container(
@@ -306,12 +331,18 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
             child: GestureDetector(
               onTap: () => _applyFilter(cat),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Insets.md, vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? activeColor : chipBgColor,
                   borderRadius: AppRadius.brFull,
                   border: Border.all(
-                    color: isSelected ? activeColor : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                    color: isSelected
+                        ? activeColor
+                        : Theme.of(context)
+                            .colorScheme
+                            .outlineVariant
+                            .withValues(alpha: 0.3),
                   ),
                 ),
                 child: Row(
@@ -320,15 +351,20 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       Icon(
                         _categoryIcon(cat.toLowerCase()),
                         size: 14,
-                        color: isSelected ? activeTextColor : Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: isSelected
+                            ? activeTextColor
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       const SizedBox(width: 6),
                     ],
                     Text(
                       cat,
                       style: AppTypography.bodySm.copyWith(
-                        color: isSelected ? activeTextColor : Theme.of(context).colorScheme.onSurface,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected
+                            ? activeTextColor
+                            : Theme.of(context).colorScheme.onSurface,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ],
@@ -376,7 +412,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.smart_toy_outlined, color: Colors.white, size: 24),
+                  const Icon(Icons.smart_toy_outlined,
+                      color: Colors.white, size: 24),
                   const SizedBox(width: Insets.sm),
                   Text(
                     'Monthly Insights',
@@ -389,7 +426,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               ),
               const SizedBox(height: Insets.sm),
               Text(
-                "You've saved \$420 more than last month. You're on track to hit your year-end travel goal!",
+                "You've saved ${ref.watch(currencySymbolProvider)}420 more than last month. You're on track to hit your year-end travel goal!",
                 style: AppTypography.bodyMd.copyWith(
                   color: Colors.white.withValues(alpha: 0.9),
                 ),
@@ -400,8 +437,10 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
                   foregroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(borderRadius: AppRadius.brMd),
-                  padding: const EdgeInsets.symmetric(horizontal: Insets.lg, vertical: 12),
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadius.brMd),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Insets.lg, vertical: 12),
                   elevation: 0,
                 ),
                 child: Text(
@@ -419,7 +458,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     );
   }
 
-  List<Widget> _buildGroupedTransactionList(BuildContext context, List<TransactionEntity> transactions) {
+  List<Widget> _buildGroupedTransactionList(BuildContext context,
+      List<TransactionEntity> transactions, String currencySymbol) {
     final List<Widget> widgets = [];
 
     final Map<String, List<TransactionEntity>> grouped = {};
@@ -434,11 +474,15 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     grouped.forEach((dateString, list) {
       widgets.add(
         Padding(
-          padding: const EdgeInsets.fromLTRB(Insets.xs, Insets.md, Insets.xs, Insets.sm),
+          padding: const EdgeInsets.fromLTRB(
+              Insets.xs, Insets.md, Insets.xs, Insets.sm),
           child: Text(
             dateString,
             style: AppTypography.labelMd.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurfaceVariant
+                  .withValues(alpha: 0.5),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
             ),
@@ -450,6 +494,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
         widgets.add(
           _TransactionListItemWidget(
             transaction: t,
+            currencySymbol: currencySymbol,
             onTap: () => context.push('/transactions/${t.id}'),
             onDelete: () => _deleteTransaction(t.id),
           ),
@@ -465,12 +510,16 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Transaction'),
-        content: const Text('Are you sure you want to delete this transaction?'),
+        content:
+            const Text('Are you sure you want to delete this transaction?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.expense)),
+            child: const Text('Delete',
+                style: TextStyle(color: AppColors.expense)),
           ),
         ],
       ),
@@ -506,11 +555,13 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
 class _TransactionListItemWidget extends StatelessWidget {
   final TransactionEntity transaction;
+  final String currencySymbol;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
   const _TransactionListItemWidget({
     required this.transaction,
+    required this.currencySymbol,
     required this.onTap,
     required this.onDelete,
   });
@@ -536,25 +587,29 @@ class _TransactionListItemWidget extends StatelessWidget {
             color: const Color(0xFFBA1A1A).withValues(alpha: 0.15),
             borderRadius: AppRadius.brXl,
           ),
-          child: const Icon(Icons.delete_outline_rounded, color: Color(0xFFBA1A1A)),
+          child: const Icon(Icons.delete_outline_rounded,
+              color: Color(0xFFBA1A1A)),
         ),
         onDismissed: (_) => onDelete(),
         child: GlassCard(
           onTap: onTap,
-          padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: 12),
+          padding:
+              const EdgeInsets.symmetric(horizontal: Insets.md, vertical: 12),
           child: Row(
             children: [
               Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: _categoryBgColor(context, transaction.category.toLowerCase()),
+                  color: _categoryBgColor(
+                      context, transaction.category.toLowerCase()),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   _categoryIcon(transaction.category.toLowerCase()),
                   size: 20,
-                  color: _categoryColor(context, transaction.category.toLowerCase()),
+                  color: _categoryColor(
+                      context, transaction.category.toLowerCase()),
                 ),
               ),
               const SizedBox(width: Insets.md),
@@ -575,14 +630,20 @@ class _TransactionListItemWidget extends StatelessWidget {
                     Text(
                       '${transaction.category} • ${DateFormat('h:mm a').format(transaction.date)}',
                       style: AppTypography.bodySm.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withValues(alpha: 0.8),
                       ),
                     ),
                     const SizedBox(height: 1),
                     Text(
                       'Visa ****1234 • Palo Alto, CA',
                       style: AppTypography.bodySm.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant
+                            .withValues(alpha: 0.5),
                         fontSize: 10,
                       ),
                     ),
@@ -591,7 +652,7 @@ class _TransactionListItemWidget extends StatelessWidget {
               ),
               const SizedBox(width: Insets.sm),
               Text(
-                '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(transaction.amount)}',
+                '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(transaction.amount, currencySymbol: currencySymbol)}',
                 style: AppTypography.bodyMd.copyWith(
                   fontWeight: FontWeight.bold,
                   color: amountColor,
@@ -649,16 +710,20 @@ class _TransactionListItemWidget extends StatelessWidget {
     switch (category) {
       case 'food':
       case 'dining':
-        return (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD)).withValues(alpha: 0.2);
+        return (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD))
+            .withValues(alpha: 0.2);
       case 'shopping':
       case 'transport':
-        return (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff)).withValues(alpha: 0.25);
+        return (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff))
+            .withValues(alpha: 0.25);
       case 'bills':
-        return (isDark ? const Color(0xFF93000a) : const Color(0xFFffdad6)).withValues(alpha: 0.2);
+        return (isDark ? const Color(0xFF93000a) : const Color(0xFFffdad6))
+            .withValues(alpha: 0.2);
       case 'salary':
       case 'travel':
       default:
-        return (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6)).withValues(alpha: 0.2);
+        return (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6))
+            .withValues(alpha: 0.2);
     }
   }
 }

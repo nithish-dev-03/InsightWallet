@@ -10,6 +10,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/format_utils.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/transaction_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 
 class TransactionDetailScreen extends ConsumerWidget {
   final String transactionId;
@@ -18,7 +19,9 @@ class TransactionDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final transactionAsync = ref.watch(singleTransactionProvider(transactionId));
+    final transactionAsync =
+        ref.watch(singleTransactionProvider(transactionId));
+    final currencySymbol = ref.watch(currencySymbolProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -50,7 +53,8 @@ class TransactionDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(height: Insets.md),
               FilledButton(
-                onPressed: () => ref.invalidate(singleTransactionProvider(transactionId)),
+                onPressed: () =>
+                    ref.invalidate(singleTransactionProvider(transactionId)),
                 child: const Text('Retry'),
               ),
             ],
@@ -70,14 +74,16 @@ class TransactionDetailScreen extends ConsumerWidget {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: (isIncome ? AppColors.income : AppColors.expense)
-                              .withValues(alpha: 0.15),
+                          color:
+                              (isIncome ? AppColors.income : AppColors.expense)
+                                  .withValues(alpha: 0.15),
                           borderRadius: AppRadius.brXl,
                         ),
                         child: Icon(
                           _categoryIcon(transaction.categoryIcon),
                           size: 32,
-                          color: isIncome ? AppColors.income : AppColors.expense,
+                          color:
+                              isIncome ? AppColors.income : AppColors.expense,
                         ),
                       ),
                       const SizedBox(height: Insets.md),
@@ -89,9 +95,10 @@ class TransactionDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: Insets.sm),
                       Text(
-                        '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(transaction.amount)}',
+                        '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(transaction.amount, currencySymbol: currencySymbol)}',
                         style: AppTypography.numberXl.copyWith(
-                          color: isIncome ? AppColors.income : AppColors.expense,
+                          color:
+                              isIncome ? AppColors.income : AppColors.expense,
                         ),
                       ),
                       const SizedBox(height: Insets.sm),
@@ -109,14 +116,16 @@ class TransactionDetailScreen extends ConsumerWidget {
                         'Date',
                         FormatUtils.formatAbsoluteDate(transaction.date),
                       ),
-                      if (transaction.note != null && transaction.note!.isNotEmpty)
+                      if (transaction.note != null &&
+                          transaction.note!.isNotEmpty)
                         _buildDetailRow(
                           context,
                           Icons.notes_rounded,
                           'Note',
                           transaction.note!,
                         ),
-                      if (transaction.tags != null && transaction.tags!.isNotEmpty)
+                      if (transaction.tags != null &&
+                          transaction.tags!.isNotEmpty)
                         _buildDetailRow(
                           context,
                           Icons.label_outline_rounded,
@@ -135,7 +144,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                         Text(
                           'Receipt',
                           style: AppTypography.bodyMd.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: Insets.sm),
@@ -152,7 +162,9 @@ class TransactionDetailScreen extends ConsumerWidget {
                               child: Center(
                                 child: Icon(
                                   Icons.broken_image_rounded,
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                 ),
                               ),
                             ),
@@ -200,7 +212,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                     label: const Text('Delete Transaction'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.expense,
-                      side: BorderSide(color: AppColors.expense.withValues(alpha: 0.5)),
+                      side: BorderSide(
+                          color: AppColors.expense.withValues(alpha: 0.5)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: const RoundedRectangleBorder(
                         borderRadius: AppRadius.brMd,
@@ -216,12 +229,14 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildDetailRow(
+      BuildContext context, IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(top: Insets.sm),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+          Icon(icon,
+              size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
           const SizedBox(width: Insets.sm),
           Text(
             '$label: ',

@@ -197,12 +197,12 @@ class _BudgetCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(budget.categoryName,
-                          style: AppTypography.bodyMd.copyWith(
-                              fontWeight: FontWeight.w600)),
+                          style: AppTypography.bodyMd
+                              .copyWith(fontWeight: FontWeight.w600)),
                       Text(
                         '${budget.period.name.toUpperCase()} • ${_periodLabel(budget.period)}',
-                        style: AppTypography.bodySm.copyWith(
-                            color: AppColors.darkOnSurfaceVariant),
+                        style: AppTypography.bodySm
+                            .copyWith(color: AppColors.darkOnSurfaceVariant),
                       ),
                     ],
                   ),
@@ -210,8 +210,7 @@ class _BudgetCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    AmountText(
-                        amount: budget.spent, type: AmountType.expense),
+                    AmountText(amount: budget.spent, type: AmountType.expense),
                     Text(
                       '\$${budget.amount.toStringAsFixed(0)}',
                       style: AppTypography.bodySm.copyWith(
@@ -233,8 +232,7 @@ class _BudgetCard extends StatelessWidget {
                       value: pct,
                       minHeight: 6,
                       backgroundColor: AppColors.darkSurfaceVariant,
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(progressColor),
+                      valueColor: AlwaysStoppedAnimation<Color>(progressColor),
                     ),
                   ),
                 ),

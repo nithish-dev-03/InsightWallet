@@ -38,7 +38,6 @@ class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.darkBackground,
       brightness: Brightness.dark,
-
       textTheme: GoogleFonts.plusJakartaSansTextTheme().copyWith(
         displayLarge: GoogleFonts.hankenGrotesk(
           fontSize: 48,
@@ -85,7 +84,6 @@ class AppTheme {
           color: AppColors.darkOnSurfaceVariant,
         ),
       ),
-
       cardTheme: const CardThemeData(
         elevation: 0,
         color: AppColors.darkSurface,
@@ -94,7 +92,6 @@ class AppTheme {
         ),
         clipBehavior: Clip.antiAlias,
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkPrimary,
@@ -110,11 +107,11 @@ class AppTheme {
           ),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSurfaceContainerHighest,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
           borderSide: BorderSide(color: AppColors.darkOutline),
@@ -142,7 +139,6 @@ class AppTheme {
           color: AppColors.darkOutline,
         ),
       ),
-
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.darkSurfaceContainerLow,
         selectedItemColor: AppColors.darkPrimary,
@@ -151,7 +147,6 @@ class AppTheme {
         elevation: 0,
         landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
       ),
-
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.darkSurfaceContainerLow,
         indicatorColor: AppColors.darkPrimaryContainer,
@@ -176,7 +171,6 @@ class AppTheme {
           );
         }),
       ),
-
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.darkSurfaceContainerHighest,
         labelStyle: GoogleFonts.plusJakartaSans(
@@ -188,26 +182,22 @@ class AppTheme {
           borderRadius: AppRadius.brFull,
         ),
       ),
-
       dialogTheme: const DialogThemeData(
         backgroundColor: AppColors.darkSurface,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.brXl,
         ),
       ),
-
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.darkSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-
       dividerTheme: DividerThemeData(
         color: AppColors.darkOutlineVariant.withValues(alpha: 0.5),
         thickness: 1,
       ),
-
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -219,7 +209,6 @@ class AppTheme {
           color: AppColors.darkOnSurface,
         ),
       ),
-
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.darkPrimary,
         foregroundColor: AppColors.darkOnPrimary,
@@ -228,7 +217,6 @@ class AppTheme {
           borderRadius: AppRadius.brXl,
         ),
       ),
-
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -275,7 +263,6 @@ class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.lightBackground,
       brightness: Brightness.light,
-
       textTheme: GoogleFonts.plusJakartaSansTextTheme().copyWith(
         displayLarge: GoogleFonts.hankenGrotesk(
           fontSize: 48,
@@ -322,7 +309,6 @@ class AppTheme {
           color: AppColors.lightOnSurfaceVariant,
         ),
       ),
-
       cardTheme: const CardThemeData(
         elevation: 0,
         color: AppColors.lightSurface,
@@ -331,7 +317,6 @@ class AppTheme {
         ),
         clipBehavior: Clip.antiAlias,
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.lightPrimary,
@@ -347,16 +332,16 @@ class AppTheme {
           ),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.lightSurfaceContainerHighest,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border:const OutlineInputBorder(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        border: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
           borderSide: BorderSide(color: AppColors.lightOutline),
         ),
-        enabledBorder:const OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: AppRadius.brMd,
           borderSide: BorderSide(color: AppColors.lightOutlineVariant),
         ),
@@ -379,7 +364,6 @@ class AppTheme {
           color: AppColors.lightOutline,
         ),
       ),
-
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.lightSurfaceContainerLow,
         selectedItemColor: AppColors.lightPrimary,
@@ -387,7 +371,6 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
-
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.lightSurfaceContainerLow,
         indicatorColor: AppColors.lightPrimaryContainer.withValues(alpha: 0.2),
@@ -412,7 +395,6 @@ class AppTheme {
           );
         }),
       ),
-
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.lightSurfaceContainerHighest,
         labelStyle: GoogleFonts.plusJakartaSans(
@@ -424,26 +406,22 @@ class AppTheme {
           borderRadius: AppRadius.brFull,
         ),
       ),
-
       dialogTheme: const DialogThemeData(
         backgroundColor: AppColors.lightSurface,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.brXl,
         ),
       ),
-
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.lightSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-
       dividerTheme: DividerThemeData(
         color: AppColors.lightOutlineVariant.withValues(alpha: 0.5),
         thickness: 1,
       ),
-
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -455,7 +433,6 @@ class AppTheme {
           color: AppColors.lightOnSurface,
         ),
       ),
-
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.lightPrimary,
         foregroundColor: AppColors.lightOnPrimary,
@@ -464,7 +441,6 @@ class AppTheme {
           borderRadius: AppRadius.brXl,
         ),
       ),
-
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {

@@ -28,6 +28,9 @@ mixin _$ProfileModel {
   String get theme => throw _privateConstructorUsedError;
   bool get emailVerified => throw _privateConstructorUsedError;
   bool get biometricEnabled => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
+  String get bio => throw _privateConstructorUsedError;
+  String get location => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,6 +54,9 @@ abstract class $ProfileModelCopyWith<$Res> {
       String theme,
       bool emailVerified,
       bool biometricEnabled,
+      String title,
+      String bio,
+      String location,
       DateTime createdAt});
 }
 
@@ -75,6 +81,9 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
     Object? theme = null,
     Object? emailVerified = null,
     Object? biometricEnabled = null,
+    Object? title = null,
+    Object? bio = null,
+    Object? location = null,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
@@ -110,6 +119,18 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
           ? _value.biometricEnabled
           : biometricEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: null == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -135,6 +156,9 @@ abstract class _$$ProfileModelImplCopyWith<$Res>
       String theme,
       bool emailVerified,
       bool biometricEnabled,
+      String title,
+      String bio,
+      String location,
       DateTime createdAt});
 }
 
@@ -157,6 +181,9 @@ class __$$ProfileModelImplCopyWithImpl<$Res>
     Object? theme = null,
     Object? emailVerified = null,
     Object? biometricEnabled = null,
+    Object? title = null,
+    Object? bio = null,
+    Object? location = null,
     Object? createdAt = null,
   }) {
     return _then(_$ProfileModelImpl(
@@ -192,6 +219,18 @@ class __$$ProfileModelImplCopyWithImpl<$Res>
           ? _value.biometricEnabled
           : biometricEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: null == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -212,6 +251,9 @@ class _$ProfileModelImpl implements _ProfileModel {
       this.theme = 'dark',
       this.emailVerified = false,
       this.biometricEnabled = false,
+      this.title = '',
+      this.bio = '',
+      this.location = '',
       required this.createdAt});
 
   factory _$ProfileModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -238,11 +280,20 @@ class _$ProfileModelImpl implements _ProfileModel {
   @JsonKey()
   final bool biometricEnabled;
   @override
+  @JsonKey()
+  final String title;
+  @override
+  @JsonKey()
+  final String bio;
+  @override
+  @JsonKey()
+  final String location;
+  @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'ProfileModel(id: $id, name: $name, email: $email, avatar: $avatar, currency: $currency, theme: $theme, emailVerified: $emailVerified, biometricEnabled: $biometricEnabled, createdAt: $createdAt)';
+    return 'ProfileModel(id: $id, name: $name, email: $email, avatar: $avatar, currency: $currency, theme: $theme, emailVerified: $emailVerified, biometricEnabled: $biometricEnabled, title: $title, bio: $bio, location: $location, createdAt: $createdAt)';
   }
 
   @override
@@ -261,14 +312,30 @@ class _$ProfileModelImpl implements _ProfileModel {
                 other.emailVerified == emailVerified) &&
             (identical(other.biometricEnabled, biometricEnabled) ||
                 other.biometricEnabled == biometricEnabled) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.bio, bio) || other.bio == bio) &&
+            (identical(other.location, location) ||
+                other.location == location) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, email, avatar,
-      currency, theme, emailVerified, biometricEnabled, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      email,
+      avatar,
+      currency,
+      theme,
+      emailVerified,
+      biometricEnabled,
+      title,
+      bio,
+      location,
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -294,6 +361,9 @@ abstract class _ProfileModel implements ProfileModel {
       final String theme,
       final bool emailVerified,
       final bool biometricEnabled,
+      final String title,
+      final String bio,
+      final String location,
       required final DateTime createdAt}) = _$ProfileModelImpl;
 
   factory _ProfileModel.fromJson(Map<String, dynamic> json) =
@@ -315,6 +385,12 @@ abstract class _ProfileModel implements ProfileModel {
   bool get emailVerified;
   @override
   bool get biometricEnabled;
+  @override
+  String get title;
+  @override
+  String get bio;
+  @override
+  String get location;
   @override
   DateTime get createdAt;
   @override

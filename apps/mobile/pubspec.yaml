@@ -45,5 +45,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/currency/
     - assets/fonts/
     - assets/sample_data/

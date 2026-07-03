@@ -84,7 +84,8 @@ class SettingsModel with _$SettingsModel {
         language: entity.language,
         currency: entity.currency,
         exportFormat: entity.exportFormat,
-        notifications: NotificationsConfigModel.fromEntity(entity.notifications),
+        notifications:
+            NotificationsConfigModel.fromEntity(entity.notifications),
         privacy: PrivacyConfigModel.fromEntity(entity.privacy),
       );
 }

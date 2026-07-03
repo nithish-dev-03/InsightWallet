@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import userRepository from '../repositories/userRepository.js';
+import authRepository from '../repositories/authRepository.js';
 import refreshTokenRepository from '../repositories/refreshTokenRepository.js';
 import settingRepository from '../repositories/settingRepository.js';
 import { generateAccessToken, generateRefreshToken, verifyToken } from '../utils/generateToken.js';
@@ -7,38 +7,38 @@ import sendEmail from '../utils/sendEmail.js';
 import env from '../config/env.js';
 
 class AuthService {
-  async register({ name, email, password }) {
-    const existingUser = await userRepository.findByEmail(email);
-    if (existingUser) {
+  async register({ email, password }) {
+    const existingAuth = await authRepository.findByEmail(email);
+    if (existingAuth) {
       const error = new Error('Email already registered.');
       error.statusCode = 409;
       throw error;
     }
 
-    const user = await userRepository.create({ name, email, password });
-    await settingRepository.upsert(user._id, {});
+    const auth = await authRepository.create({ email, password });
+    await settingRepository.upsert(auth._id, {});
 
-    const tokens = await this._generateTokens(user._id);
-    return { user, ...tokens };
+    const tokens = await this._generateTokens(auth._id);
+    return { user: auth, ...tokens };
   }
 
   async login({ email, password }) {
-    const user = await userRepository.findByEmailWithPassword(email);
-    if (!user) {
-      const error = new Error('Invalid email or password.');
+    const auth = await authRepository.findByEmailWithPassword(email);
+    if (!auth) {
+      const error = new Error('No User found.');
       error.statusCode = 401;
       throw error;
     }
 
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await auth.comparePassword(password);
     if (!isMatch) {
       const error = new Error('Invalid email or password.');
       error.statusCode = 401;
       throw error;
     }
 
-    const tokens = await this._generateTokens(user._id);
-    return { user, ...tokens };
+    const tokens = await this._generateTokens(auth._id);
+    return { user: auth, ...tokens };
   }
 
   async refreshToken(token) {
@@ -62,23 +62,23 @@ class AuthService {
   }
 
   async forgotPassword(email) {
-    const user = await userRepository.findByEmail(email);
-    if (!user) {
+    const auth = await authRepository.findByEmail(email);
+    if (!auth) {
       return;
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-    user.resetPasswordToken = hashedToken;
-    user.resetPasswordExpires = Date.now() + 3600000;
-    await user.save();
+    auth.resetPasswordToken = hashedToken;
+    auth.resetPasswordExpires = Date.now() + 3600000;
+    await auth.save();
 
     const resetUrl = `${env.frontendUrl}/reset-password/${resetToken}`;
 
     try {
       await sendEmail({
-        to: user.email,
+        to: auth.email,
         subject: 'Password Reset Request - InsightWallet',
         html: `
           <h1>Password Reset</h1>
@@ -89,32 +89,32 @@ class AuthService {
         `,
       });
     } catch (error) {
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpires = undefined;
-      await user.save();
+      auth.resetPasswordToken = undefined;
+      auth.resetPasswordExpires = undefined;
+      await auth.save();
       throw error;
     }
   }
 
   async resetPassword(token, newPassword) {
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const user = await userRepository.findOne({
+    const auth = await authRepository.findOne({
       resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() },
     });
 
-    if (!user) {
+    if (!auth) {
       const error = new Error('Invalid or expired reset token.');
       error.statusCode = 400;
       throw error;
     }
 
-    user.password = newPassword;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpires = undefined;
-    await user.save();
+    auth.password = newPassword;
+    auth.resetPasswordToken = undefined;
+    auth.resetPasswordExpires = undefined;
+    await auth.save();
 
-    await refreshTokenRepository.deleteAllForUser(user._id);
+    await refreshTokenRepository.deleteAllForUser(auth._id);
   }
 
   async _generateTokens(userId) {

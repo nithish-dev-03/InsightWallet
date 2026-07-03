@@ -1,6 +1,20 @@
 import mongoose from 'mongoose';
 import env from './env.js';
 
+// Global plugin to ensure all schemas include virtual 'id' mapping when serialized to JSON
+mongoose.plugin((schema) => {
+  schema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: (doc, ret) => {
+      if (ret._id) {
+        ret.id = ret._id.toString();
+      }
+      return ret;
+    },
+  });
+});
+
 const connectDatabase = async () => {
   const maxRetries = 5;
   let retries = 0;
@@ -8,6 +22,7 @@ const connectDatabase = async () => {
   while (retries < maxRetries) {
     try {
       await mongoose.connect(env.mongodbUri, {
+        dbName: env.dbName,
         maxPoolSize: 10,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,

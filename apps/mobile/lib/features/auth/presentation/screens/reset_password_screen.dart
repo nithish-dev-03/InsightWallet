@@ -20,7 +20,8 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key, required this.token});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -82,12 +83,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 const SizedBox(height: Insets.lg),
                 Text(
                   'Reset password',
-                  style: AppTypography.displayLgMobile.copyWith(color: AppColors.onSurface),
+                  style: AppTypography.displayLgMobile
+                      .copyWith(color: AppColors.onSurface),
                 ),
                 const SizedBox(height: Insets.sm),
                 Text(
                   'Enter your new password below.',
-                  style: AppTypography.bodyMd.copyWith(color: AppColors.onSurfaceVariant),
+                  style: AppTypography.bodyMd
+                      .copyWith(color: AppColors.onSurfaceVariant),
                 ),
                 const SizedBox(height: Insets.xl),
                 if (_success)
@@ -102,7 +105,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                         const SizedBox(height: Insets.md),
                         Text(
                           'Password reset successful',
-                          style: AppTypography.headlineSm.copyWith(color: AppColors.onSurface),
+                          style: AppTypography.headlineSm
+                              .copyWith(color: AppColors.onSurface),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: Insets.lg),
@@ -140,8 +144,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
                               ),
-                              onPressed: () =>
-                                  setState(() => _obscurePassword = !_obscurePassword),
+                              onPressed: () => setState(
+                                  () => _obscurePassword = !_obscurePassword),
                             ),
                           ),
                         ),
@@ -150,8 +154,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                           controller: _confirmController,
                           obscureText: _obscureConfirm,
                           textInputAction: TextInputAction.done,
-                          validator: (v) =>
-                              Validators.confirmPassword(v, _passwordController.text),
+                          validator: (v) => Validators.confirmPassword(
+                              v, _passwordController.text),
                           decoration: InputDecoration(
                             labelText: 'Confirm Password',
                             prefixIcon: const Icon(Icons.lock_outlined),
@@ -161,8 +165,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                                     ? Icons.visibility_outlined
                                     : Icons.visibility_off_outlined,
                               ),
-                              onPressed: () =>
-                                  setState(() => _obscureConfirm = !_obscureConfirm),
+                              onPressed: () => setState(
+                                  () => _obscureConfirm = !_obscureConfirm),
                             ),
                           ),
                           onFieldSubmitted: (_) => _handleSubmit(),

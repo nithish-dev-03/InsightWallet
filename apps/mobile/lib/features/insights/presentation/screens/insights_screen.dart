@@ -60,11 +60,10 @@ class _InsightsContent extends StatelessWidget {
         const SizedBox(height: Insets.md),
         const SectionHeader(title: 'Budget Suggestions'),
         const SizedBox(height: Insets.sm),
-        ...insights.budgetSuggestions
-            .map((s) => Padding(
-                  padding: const EdgeInsets.only(bottom: Insets.sm),
-                  child: _SuggestionCard(suggestion: s),
-                )),
+        ...insights.budgetSuggestions.map((s) => Padding(
+              padding: const EdgeInsets.only(bottom: Insets.sm),
+              child: _SuggestionCard(suggestion: s),
+            )),
         const SizedBox(height: Insets.md),
         const SectionHeader(title: 'Expense Trends'),
         const SizedBox(height: Insets.sm),
@@ -91,8 +90,7 @@ class _MonthlySummaryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(Insets.sm),
                 decoration: BoxDecoration(
-                  color: AppColors.darkPrimaryContainer
-                      .withValues(alpha: 0.2),
+                  color: AppColors.darkPrimaryContainer.withValues(alpha: 0.2),
                   borderRadius: AppRadius.brMd,
                 ),
                 child: const Icon(Icons.calendar_month_rounded,
@@ -161,8 +159,8 @@ class _SummaryLine extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label,
-            style: AppTypography.bodySm.copyWith(
-                color: AppColors.darkOnSurfaceVariant)),
+            style: AppTypography.bodySm
+                .copyWith(color: AppColors.darkOnSurfaceVariant)),
         const SizedBox(height: Insets.xs),
         AmountText(
           amount: amount,
@@ -216,16 +214,14 @@ class _SpendingPredictionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(Insets.sm),
                 decoration: BoxDecoration(
-                  color: AppColors.darkPrimaryContainer
-                      .withValues(alpha: 0.2),
+                  color: AppColors.darkPrimaryContainer.withValues(alpha: 0.2),
                   borderRadius: AppRadius.brMd,
                 ),
                 child: const Icon(Icons.insights_rounded,
                     color: AppColors.darkPrimary, size: 20),
               ),
               const SizedBox(width: Insets.sm),
-              Text('Spending Prediction',
-                  style: AppTypography.headlineSm),
+              Text('Spending Prediction', style: AppTypography.headlineSm),
             ],
           ),
           const SizedBox(height: Insets.md),
@@ -236,8 +232,8 @@ class _SpendingPredictionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Predicted Next Month',
-                        style: AppTypography.bodySm.copyWith(
-                            color: AppColors.darkOnSurfaceVariant)),
+                        style: AppTypography.bodySm
+                            .copyWith(color: AppColors.darkOnSurfaceVariant)),
                     const SizedBox(height: Insets.xs),
                     AmountText(
                         amount: prediction.predictedAmount,
@@ -250,8 +246,8 @@ class _SpendingPredictionCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text('Current Average',
-                        style: AppTypography.bodySm.copyWith(
-                            color: AppColors.darkOnSurfaceVariant)),
+                        style: AppTypography.bodySm
+                            .copyWith(color: AppColors.darkOnSurfaceVariant)),
                     const SizedBox(height: Insets.xs),
                     AmountText(
                         amount: prediction.currentAverage,
@@ -268,8 +264,7 @@ class _SpendingPredictionCard extends StatelessWidget {
               const SizedBox(width: Insets.xs),
               Text(trendLabel,
                   style: AppTypography.bodySm.copyWith(
-                      color: trendColor,
-                      fontWeight: FontWeight.w500)),
+                      color: trendColor, fontWeight: FontWeight.w500)),
             ],
           ),
         ],
@@ -319,20 +314,19 @@ class _SuggestionCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(_urgencyIcon(suggestion.urgency),
-                color: urgColor, size: 20),
+            Icon(_urgencyIcon(suggestion.urgency), color: urgColor, size: 20),
             const SizedBox(width: Insets.sm),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(suggestion.category,
-                      style: AppTypography.bodyMd.copyWith(
-                          fontWeight: FontWeight.w600)),
+                      style: AppTypography.bodyMd
+                          .copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 2),
                   Text(suggestion.message,
-                      style: AppTypography.bodySm.copyWith(
-                          color: AppColors.darkOnSurfaceVariant)),
+                      style: AppTypography.bodySm
+                          .copyWith(color: AppColors.darkOnSurfaceVariant)),
                 ],
               ),
             ),
@@ -356,8 +350,8 @@ class _TrendCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: Insets.lg),
               child: Center(
                 child: Text('No trend data available',
-                    style: AppTypography.bodySm.copyWith(
-                        color: AppColors.darkOnSurfaceVariant)),
+                    style: AppTypography.bodySm
+                        .copyWith(color: AppColors.darkOnSurfaceVariant)),
               ),
             )
           : SizedBox(
@@ -367,8 +361,7 @@ class _TrendCard extends StatelessWidget {
                   lineBarsData: [
                     LineChartBarData(
                       spots: trends.asMap().entries.map((entry) {
-                        return FlSpot(
-                            entry.key.toDouble(), entry.value.amount);
+                        return FlSpot(entry.key.toDouble(), entry.value.amount);
                       }).toList(),
                       isCurved: true,
                       color: AppColors.darkPrimary,
@@ -386,8 +379,7 @@ class _TrendCard extends StatelessWidget {
                       ),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: AppColors.darkPrimary
-                            .withValues(alpha: 0.1),
+                        color: AppColors.darkPrimary.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -399,18 +391,13 @@ class _TrendCard extends StatelessWidget {
                           final idx = value.toInt();
                           if (idx >= 0 && idx < trends.length) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.only(top: 4),
                               child: Text(
                                 trends[idx].month.length > 3
-                                    ? trends[idx]
-                                        .month
-                                        .substring(0, 3)
+                                    ? trends[idx].month.substring(0, 3)
                                     : trends[idx].month,
-                                style: AppTypography.labelMd
-                                    .copyWith(
-                                        color: AppColors
-                                            .darkOnSurfaceVariant),
+                                style: AppTypography.labelMd.copyWith(
+                                    color: AppColors.darkOnSurfaceVariant),
                               ),
                             );
                           }
@@ -426,27 +413,24 @@ class _TrendCard extends StatelessWidget {
                           return Text(
                             '\$${value.toInt()}',
                             style: AppTypography.labelMd.copyWith(
-                                color:
-                                    AppColors.darkOnSurfaceVariant),
+                                color: AppColors.darkOnSurfaceVariant),
                           );
                         },
                       ),
                     ),
                     topTitles: AxisTitles(
-                      sideTitles:
-                          SideTitles(showTitles: false),
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                     rightTitles: AxisTitles(
-                      sideTitles:
-                          SideTitles(showTitles: false),
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: AppColors.darkOutlineVariant
-                          .withValues(alpha: 0.2),
+                      color:
+                          AppColors.darkOutlineVariant.withValues(alpha: 0.2),
                       strokeWidth: 1,
                     ),
                   ),

@@ -11,6 +11,8 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../providers/profile_provider.dart';
 import '../../domain/entities/profile_entity.dart';
+import '../../../../core/router/app_router.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -22,33 +24,36 @@ class ProfileScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: profileAsync.when(
-          loading: () => const ListShimmer(itemCount: 5),
-          error: (e, _) => Center(
-            child: Padding(
-              padding: const EdgeInsets.all(Insets.lg),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.error_outline, size: 48, color: AppColors.darkError),
-                  const SizedBox(height: Insets.md),
-                  Text(
-                    'Failed to load profile',
-                    style: AppTypography.bodyLg.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
+        child: profileAsync.hasValue
+            ? _ProfileContent(profile: profileAsync.value!)
+            : profileAsync.when(
+                loading: () => const ListShimmer(itemCount: 5),
+                error: (e, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(Insets.lg),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline,
+                            size: 48, color: AppColors.darkError),
+                        const SizedBox(height: Insets.md),
+                        Text(
+                          'Failed to load profile',
+                          style: AppTypography.bodyLg.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: Insets.md),
+                        FilledButton(
+                          onPressed: () => ref.invalidate(profileProvider),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: Insets.md),
-                  FilledButton(
-                    onPressed: () => ref.invalidate(profileProvider),
-                    child: const Text('Retry'),
-                  ),
-                ],
+                ),
+                data: (profile) => _ProfileContent(profile: profile),
               ),
-            ),
-          ),
-          data: (profile) => _ProfileContent(profile: profile),
-        ),
       ),
     );
   }
@@ -70,18 +75,24 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
   bool _emailReports = true;
   late bool _darkMode;
   bool _initialized = false;
+  bool _isThemeUpdating = false;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     if (!_initialized) {
-      _darkMode = isDark;
+      _darkMode = widget.profile.theme == 'system'
+          ? isDark
+          : widget.profile.theme == 'dark';
       _initialized = true;
     }
     final textPrimary = isDark ? Colors.white : AppColors.lightOnSurface;
-    final textSecondary = isDark ? AppColors.darkOnSurfaceVariant : AppColors.lightOnSurfaceVariant;
+    final textSecondary = isDark
+        ? AppColors.darkOnSurfaceVariant
+        : AppColors.lightOnSurfaceVariant;
 
-    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final primaryColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
 
     return ListView(
       padding: const EdgeInsets.only(bottom: Insets.xxl),
@@ -121,21 +132,24 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
 
   Widget _buildAppBar(BuildContext context, Color textPrimary, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Insets.md, Insets.md, Insets.md, Insets.sm),
+      padding:
+          const EdgeInsets.fromLTRB(Insets.md, Insets.md, Insets.md, Insets.sm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
-                ),
-                onPressed: () {},
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
+              // IconButton(
+              //   icon: Icon(
+              //     Icons.menu,
+              //     color: isDark
+              //         ? const Color(0xFFD2BBFF)
+              //         : const Color(0xFF3525CD),
+              //   ),
+              //   onPressed: () {},
+              //   padding: EdgeInsets.zero,
+              //   constraints: const BoxConstraints(),
+              // ),
               const SizedBox(width: Insets.sm),
               Text(
                 'InsightWallet',
@@ -157,9 +171,13 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
   }
 
   Widget _buildUserHeader(BuildContext context, bool isDark) {
-    final name = widget.profile.name.isNotEmpty ? widget.profile.name : 'Alex Thompson';
-    final email = widget.profile.email.isNotEmpty ? widget.profile.email : 'alex.thompson@insight.com';
-    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final name =
+        widget.profile.name.isNotEmpty ? widget.profile.name : 'Alex Thompson';
+    final email = widget.profile.email.isNotEmpty
+        ? widget.profile.email
+        : 'alex.thompson@insight.com';
+    final primaryColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
 
     return Column(
       children: [
@@ -178,11 +196,15 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                   ),
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundColor: isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9),
-                    backgroundImage: widget.profile.avatar != null && widget.profile.avatar!.isNotEmpty
+                    backgroundColor: isDark
+                        ? const Color(0xFF221E28)
+                        : const Color(0xFFF0ECF9),
+                    backgroundImage: widget.profile.avatar != null &&
+                            widget.profile.avatar!.isNotEmpty
                         ? NetworkImage(widget.profile.avatar!)
                         : null,
-                    child: widget.profile.avatar == null || widget.profile.avatar!.isEmpty
+                    child: widget.profile.avatar == null ||
+                            widget.profile.avatar!.isEmpty
                         ? Text(
                             name[0].toUpperCase(),
                             style: AppTypography.headlineMd.copyWith(
@@ -202,7 +224,9 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                     decoration: BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
+                      border: Border.all(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          width: 2),
                     ),
                     child: Icon(
                       Icons.camera_alt_outlined,
@@ -236,7 +260,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
           decoration: BoxDecoration(
             color: const Color(0xFF8B5CF6).withValues(alpha: 0.15),
             borderRadius: AppRadius.brFull,
-            border: Border.all(color: const Color(0xFF8B5CF6).withValues(alpha: 0.3)),
+            border: Border.all(
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.3)),
           ),
           child: Text(
             'PREMIUM MEMBER',
@@ -272,9 +297,12 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
   }
 
   Widget _buildStatsGrid(BuildContext context, bool isDark) {
-    final primaryColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
-    final tertiaryColor = isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
-    final secondaryContainer = isDark ? const Color(0xFF7C3AED) : const Color(0xFF4F46E5);
+    final primaryColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final tertiaryColor =
+        isDark ? const Color(0xFFFFB784) : const Color(0xFF713700);
+    final secondaryContainer =
+        isDark ? const Color(0xFF7C3AED) : const Color(0xFF4F46E5);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
@@ -295,14 +323,20 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String label, String value, Color accentColor) {
+  Widget _buildStatCard(
+      BuildContext context, String label, String value, Color accentColor) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9).withValues(alpha: 0.6),
+        color: isDark
+            ? const Color(0xFF221E28)
+            : const Color(0xFFF0ECF9).withValues(alpha: 0.6),
         borderRadius: AppRadius.brLg,
         border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.15),
+          color: Theme.of(context)
+              .colorScheme
+              .outlineVariant
+              .withValues(alpha: 0.15),
         ),
       ),
       padding: const EdgeInsets.all(Insets.md),
@@ -313,7 +347,10 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
           Text(
             label,
             style: AppTypography.labelMd.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurfaceVariant
+                  .withValues(alpha: 0.7),
               fontSize: 10,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
@@ -333,8 +370,10 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
     );
   }
 
-  Widget _buildSubscriptionCard(BuildContext context, bool isDark, Color primaryColor) {
-    final isDarkCardColor = isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
+  Widget _buildSubscriptionCard(
+      BuildContext context, bool isDark, Color primaryColor) {
+    final isDarkCardColor =
+        isDark ? const Color(0xFF221E28) : const Color(0xFFF0ECF9);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
@@ -397,11 +436,15 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
 
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(Insets.md + 4, Insets.md, Insets.md, Insets.xs),
+      padding: const EdgeInsets.fromLTRB(
+          Insets.md + 4, Insets.md, Insets.md, Insets.xs),
       child: Text(
         title.toUpperCase(),
         style: AppTypography.labelMd.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+          color: Theme.of(context)
+              .colorScheme
+              .onSurfaceVariant
+              .withValues(alpha: 0.7),
           fontWeight: FontWeight.bold,
           letterSpacing: 1.5,
         ),
@@ -409,7 +452,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
     );
   }
 
-  Widget _buildSecuritySection(BuildContext context, bool isDark, Color primaryColor) {
+  Widget _buildSecuritySection(
+      BuildContext context, bool isDark, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
       child: GlassCard(
@@ -425,7 +469,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                 value: widget.profile.biometricEnabled,
                 activeThumbColor: primaryColor,
                 activeTrackColor: primaryColor.withValues(alpha: 0.5),
-                onChanged: (v) => ref.read(profileProvider.notifier).toggleBiometric(v),
+                onChanged: (v) =>
+                    ref.read(profileProvider.notifier).toggleBiometric(v),
               ),
             ),
             const Divider(height: 1, indent: 56),
@@ -448,7 +493,10 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
               title: 'Change Password',
               trailing: Icon(
                 Icons.chevron_right_rounded,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withValues(alpha: 0.5),
               ),
               onTap: () {},
             ),
@@ -458,7 +506,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
     );
   }
 
-  Widget _buildDisplaySection(BuildContext context, bool isDark, Color primaryColor) {
+  Widget _buildDisplaySection(
+      BuildContext context, bool isDark, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
       child: GlassCard(
@@ -467,28 +516,100 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
           children: [
             _buildListTile(
               context,
-              icon: isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              icon:
+                  isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
               title: 'Theme Mode',
-              trailing: Switch(
-                value: _darkMode,
-                activeThumbColor: primaryColor,
-                activeTrackColor: primaryColor.withValues(alpha: 0.5),
-                onChanged: (v) {
-                  setState(() => _darkMode = v);
-                },
-              ),
+              trailing: _isThemeUpdating
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(primaryColor),
+                        ),
+                      ),
+                    )
+                  : Switch(
+                      value: _darkMode,
+                      activeThumbColor: primaryColor,
+                      activeTrackColor: primaryColor.withValues(alpha: 0.5),
+                      onChanged: (v) async {
+                        setState(() {
+                          _darkMode = v;
+                          _isThemeUpdating = true;
+                        });
+                        try {
+                          await ref
+                              .read(profileProvider.notifier)
+                              .updateProfile(
+                                widget.profile.copyWith(
+                                  theme: v ? 'dark' : 'light',
+                                ),
+                              );
+                        } finally {
+                          if (mounted) {
+                            setState(() {
+                              _isThemeUpdating = false;
+                            });
+                          }
+                        }
+                      },
+                    ),
             ),
             const Divider(height: 1, indent: 56),
             _buildListTile(
               context,
               icon: Icons.monetization_on_outlined,
               title: 'Currency',
-              subtitle: 'USD (\$)',
+              subtitle:
+                  '${widget.profile.currency} (${_getCurrencySymbol(widget.profile.currency)})',
               trailing: Icon(
                 Icons.chevron_right_rounded,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withValues(alpha: 0.5),
               ),
-              onTap: () {},
+              onTap: () async {
+                final selected = await showDialog<String>(
+                  context: context,
+                  builder: (ctx) => SimpleDialog(
+                    title: const Text('Select Currency'),
+                    children: ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'CAD', 'AUD']
+                        .map((code) {
+                      final symbol = _getCurrencySymbol(code);
+                      return SimpleDialogOption(
+                        onPressed: () => Navigator.pop(ctx, code),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 32,
+                              child: Text(
+                                symbol,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(code),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+
+                if (selected != null && mounted) {
+                  ref.read(profileProvider.notifier).updateProfile(
+                        widget.profile.copyWith(currency: selected),
+                      );
+                }
+              },
             ),
           ],
         ),
@@ -496,7 +617,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
     );
   }
 
-  Widget _buildAlertsSection(BuildContext context, bool isDark, Color primaryColor) {
+  Widget _buildAlertsSection(
+      BuildContext context, bool isDark, Color primaryColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
       child: GlassCard(
@@ -545,7 +667,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
   }
 
   Widget _buildMilestonesSection(BuildContext context, bool isDark) {
-    final activeColor = isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
+    final activeColor =
+        isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD);
 
     final badges = [
       {'label': 'Early Bird', 'icon': Icons.wb_sunny_outlined},
@@ -601,9 +724,12 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                           decoration: BoxDecoration(
                             color: activeColor.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
-                            border: Border.all(color: activeColor.withValues(alpha: 0.25), width: 1.5),
+                            border: Border.all(
+                                color: activeColor.withValues(alpha: 0.25),
+                                width: 1.5),
                           ),
-                          child: Icon(b['icon'] as IconData, color: activeColor, size: 20),
+                          child: Icon(b['icon'] as IconData,
+                              color: activeColor, size: 20),
                         ),
                         const SizedBox(height: 6),
                         Text(
@@ -627,7 +753,8 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
   }
 
   Widget _buildLogoutButton(BuildContext context, bool isDark) {
-    final dangerColor = isDark ? const Color(0xFFFFB4AB) : const Color(0xFFBA1A1A);
+    final dangerColor =
+        isDark ? const Color(0xFFFFB4AB) : const Color(0xFFBA1A1A);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Insets.md),
       child: InkWell(
@@ -646,7 +773,7 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
               Icon(Icons.logout_rounded, color: dangerColor, size: 18),
               const SizedBox(width: Insets.sm),
               Text(
-                'Logout from InsightWallet',
+                'Logout',
                 style: TextStyle(
                   color: dangerColor,
                   fontSize: 14,
@@ -658,6 +785,26 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
         ),
       ),
     );
+  }
+
+  String _getCurrencySymbol(String currencyCode) {
+    switch (currencyCode.toUpperCase()) {
+      case 'INR':
+        return '₹';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      case 'JPY':
+        return '¥';
+      case 'AUD':
+        return 'A\$';
+      case 'CAD':
+        return 'C\$';
+      case 'USD':
+      default:
+        return '\$';
+    }
   }
 
   Widget _buildListTile(
@@ -672,10 +819,13 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
       onTap: onTap,
       borderRadius: AppRadius.brXl,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Insets.md, vertical: 12),
+        padding:
+            const EdgeInsets.symmetric(horizontal: Insets.md, vertical: 12),
         child: Row(
           children: [
-            Icon(icon, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 20),
+            Icon(icon,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                size: 20),
             const SizedBox(width: Insets.md),
             Expanded(
               child: Column(
@@ -728,9 +878,12 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(ctx);
-              ref.read(profileProvider.notifier).logout();
+              AppRouter.setAuthenticated(false);
+              AppRouter.setNeedsProfileSetup(false);
+              context.go('/auth/login');
+              await ref.read(authProvider.notifier).logout();
             },
             child: const Text(
               'Sign Out',

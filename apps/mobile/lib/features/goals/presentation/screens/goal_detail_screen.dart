@@ -168,8 +168,8 @@ class _GoalDetailScreenState extends ConsumerState<GoalDetailScreen> {
                       ),
                       Text(
                         'Complete',
-                        style: AppTypography.bodySm.copyWith(
-                            color: AppColors.darkOnSurfaceVariant),
+                        style: AppTypography.bodySm
+                            .copyWith(color: AppColors.darkOnSurfaceVariant),
                       ),
                     ],
                   ),
@@ -182,8 +182,7 @@ class _GoalDetailScreenState extends ConsumerState<GoalDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AmountText(
-                        amount: _goal.currentAmount,
-                        type: AmountType.income),
+                        amount: _goal.currentAmount, type: AmountType.income),
                     Text(
                       ' / \$${_goal.targetAmount.toStringAsFixed(0)}',
                       style: AppTypography.headlineSm.copyWith(
@@ -228,8 +227,7 @@ class _GoalDetailScreenState extends ConsumerState<GoalDetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Milestones',
-                        style: AppTypography.headlineSm),
+                    Text('Milestones', style: AppTypography.headlineSm),
                     TextButton.icon(
                       onPressed: _addMilestone,
                       icon: const Icon(Icons.add_rounded, size: 18),
@@ -244,16 +242,16 @@ class _GoalDetailScreenState extends ConsumerState<GoalDetailScreen> {
                     child: Center(
                       child: Text(
                         'No milestones yet. Add one to track progress.',
-                        style: AppTypography.bodySm.copyWith(
-                            color: AppColors.darkOnSurfaceVariant),
+                        style: AppTypography.bodySm
+                            .copyWith(color: AppColors.darkOnSurfaceVariant),
                       ),
                     ),
                   )
                 else ...[
                   Text(
                     '$completedMilestones / ${_goal.milestones.length} completed',
-                    style: AppTypography.bodySm.copyWith(
-                        color: AppColors.darkOnSurfaceVariant),
+                    style: AppTypography.bodySm
+                        .copyWith(color: AppColors.darkOnSurfaceVariant),
                   ),
                   const SizedBox(height: Insets.sm),
                   ..._goal.milestones.asMap().entries.map((entry) {
@@ -373,8 +371,8 @@ class _StatChip extends StatelessWidget {
         ),
         Text(
           sublabel,
-          style: AppTypography.bodySm.copyWith(
-              color: AppColors.darkOnSurfaceVariant),
+          style: AppTypography.bodySm
+              .copyWith(color: AppColors.darkOnSurfaceVariant),
         ),
       ],
     );

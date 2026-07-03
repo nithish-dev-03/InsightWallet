@@ -81,8 +81,8 @@ extension ReportDataX on ReportData {
                   category: c.category,
                   amount: c.amount,
                   percentage: c.percentage,
-                  color: AppColors.chartColors[
-                      c.colorIndex % AppColors.chartColors.length],
+                  color: AppColors
+                      .chartColors[c.colorIndex % AppColors.chartColors.length],
                 ))
             .toList(),
         cashFlow: cashFlow
@@ -100,8 +100,8 @@ extension ReportDataX on ReportData {
                   name: t.name,
                   amount: t.amount,
                   percentage: t.percentage,
-                  color: AppColors.chartColors[
-                      t.colorIndex % AppColors.chartColors.length],
+                  color: AppColors
+                      .chartColors[t.colorIndex % AppColors.chartColors.length],
                 ))
             .toList(),
       );

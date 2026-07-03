@@ -94,8 +94,7 @@ class _GoalListContent extends ConsumerWidget {
                         Text('Total Saved',
                             style: AppTypography.bodySm.copyWith(
                                 color: AppColors.darkOnSurfaceVariant)),
-                        AmountText(
-                            amount: totalSaved, type: AmountType.income),
+                        AmountText(amount: totalSaved, type: AmountType.income),
                       ],
                     ),
                   ),
@@ -108,8 +107,8 @@ class _GoalListContent extends ConsumerWidget {
                   value: overallPct,
                   minHeight: 8,
                   backgroundColor: AppColors.darkSurfaceVariant,
-                  valueColor: const AlwaysStoppedAnimation(
-                      AppColors.darkPrimary),
+                  valueColor:
+                      const AlwaysStoppedAnimation(AppColors.darkPrimary),
                 ),
               ),
             ],
@@ -213,8 +212,8 @@ class _GoalCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           goal.name,
-                          style: AppTypography.bodyMd.copyWith(
-                              fontWeight: FontWeight.w600),
+                          style: AppTypography.bodyMd
+                              .copyWith(fontWeight: FontWeight.w600),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -259,8 +258,8 @@ class _GoalCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: _statusColor(goal.status)
-                              .withValues(alpha: 0.2),
+                          color:
+                              _statusColor(goal.status).withValues(alpha: 0.2),
                           borderRadius: AppRadius.brSm,
                         ),
                         child: Text(

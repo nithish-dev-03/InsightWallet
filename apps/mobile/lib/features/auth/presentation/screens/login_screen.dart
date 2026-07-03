@@ -5,7 +5,6 @@ import 'package:local_auth/local_auth.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_assets.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/router/app_router.dart';
@@ -40,8 +39,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _checkBiometrics() async {
-    final auth = LocalAuthentication();
-    final available = await auth.canCheckBiometrics;
     if (mounted) {
       // setState(() => _biometricAvailable = available);
       setState(() => _biometricAvailable = false);
@@ -103,9 +100,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     // Listen for authentication changes
     ref.listen<AuthState>(authProvider, (_, state) {
       state.whenOrNull(
-        authenticated: (_) {
+        authenticated: (user) {
           AppRouter.setAuthenticated(true);
-          context.go('/dashboard');
+          if (user.name.isEmpty) {
+            AppRouter.setNeedsProfileSetup(true);
+            context.go('/auth/profile-setup');
+          } else {
+            AppRouter.setNeedsProfileSetup(false);
+            context.go('/dashboard');
+          }
         },
       );
     });
@@ -210,7 +213,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ),
                               padding: const EdgeInsets.all(12),
                               child: Image.asset(
-                                AppAssets.logoOf(isDark),
+                                AppAssets.logoOf(true),
                                 fit: BoxFit.contain,
                               ),
                             ),

@@ -19,8 +19,7 @@ final notificationsProvider =
   NotificationListNotifier.new,
 );
 
-class NotificationListNotifier
-    extends AsyncNotifier<List<NotificationEntity>> {
+class NotificationListNotifier extends AsyncNotifier<List<NotificationEntity>> {
   @override
   Future<List<NotificationEntity>> build() async {
     final repo = ref.read(notificationRepositoryProvider);

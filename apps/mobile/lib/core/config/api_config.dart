@@ -1,10 +1,10 @@
 class ApiConfig {
   ApiConfig._();
 
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://localhost:3000',
-  );
+  static String get baseUrl {
+    const envUrl = String.fromEnvironment('API_BASE_URL');
+    return envUrl.isNotEmpty ? envUrl : 'http://localhost:5000';
+  }
 
   static const String apiPrefix = '/api/v1';
   static Duration timeout = const Duration(seconds: 30);
@@ -16,7 +16,11 @@ class ApiConfig {
   static const String refreshToken = '$apiPrefix/auth/refresh';
   static const String forgotPassword = '$apiPrefix/auth/forgot-password';
   static const String resetPassword = '$apiPrefix/auth/reset-password';
-  static const String profile = '$apiPrefix/auth/profile';
+  static const String profile = '$apiPrefix/profile';
+  static const String profileAvatar = '$apiPrefix/profile/avatar';
+  static const String profileBiometric = '$apiPrefix/profile/biometric';
+  static String profileByEmail(String email) =>
+      '$apiPrefix/profile/by-email/$email';
 
   // ── Transactions ────────────────────────────
   static const String transactions = '$apiPrefix/transactions';

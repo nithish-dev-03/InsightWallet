@@ -5,6 +5,7 @@ class StorageService {
   static const _refreshTokenKey = 'refresh_token';
   static const _biometricEnabledKey = 'biometric_enabled';
   static const _onboardedKey = 'has_onboarded';
+  static const _emailKey = 'user_email';
 
   final FlutterSecureStorage _storage;
 
@@ -69,6 +70,14 @@ class StorageService {
 
   Future<String?> getOnboarded() async {
     return await _storage.read(key: _onboardedKey);
+  }
+
+  Future<void> saveEmail(String email) async {
+    await _storage.write(key: _emailKey, value: email);
+  }
+
+  Future<String?> getEmail() async {
+    return await _storage.read(key: _emailKey);
   }
 
   Future<void> clearAll() async {

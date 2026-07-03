@@ -14,6 +14,7 @@ const env = {
   smtpUser: process.env.SMTP_USER,
   smtpPass: process.env.SMTP_PASS,
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  dbName: process.env.DATABASE_NAME || 'insightwallet',
 };
 
 export default env;

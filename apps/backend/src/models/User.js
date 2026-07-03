@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
   {
@@ -18,11 +17,20 @@ const userSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-    password: {
+    title: {
       type: String,
-      required: [true, 'Password is required'],
-      minlength: 8,
-      select: false,
+      trim: true,
+      default: '',
+    },
+    bio: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    location: {
+      type: String,
+      trim: true,
+      default: '',
     },
     avatar: {
       url: { type: String, default: '' },
@@ -46,38 +54,22 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    refreshToken: {
-      type: String,
-      select: false,
-    },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
   },
   {
     timestamps: true,
   }
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  const salt = await bcrypt.genSalt(12);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
-
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
-  delete obj.password;
-  delete obj.refreshToken;
-  delete obj.resetPasswordToken;
-  delete obj.resetPasswordExpires;
+  obj.id = obj._id ? obj._id.toString() : '';
+  if (obj.avatar && typeof obj.avatar === 'object') {
+    obj.avatar = obj.avatar.url || '';
+  }
   delete obj.__v;
   return obj;
 };
 
-const User = mongoose.model('User', userSchema);
+// Map to "users" collection (default, but let's be explicit)
+const User = mongoose.model('User', userSchema, 'users');
 export default User;

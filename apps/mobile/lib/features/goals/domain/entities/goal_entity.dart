@@ -52,7 +52,8 @@ class GoalEntity extends Equatable {
   double get percentage =>
       targetAmount > 0 ? (currentAmount / targetAmount).clamp(0.0, 1.0) : 0;
 
-  double get remaining => (targetAmount - currentAmount).clamp(0, double.infinity);
+  double get remaining =>
+      (targetAmount - currentAmount).clamp(0, double.infinity);
 
   int get daysRemaining => DateTime.now().difference(deadline).inDays.abs();
 

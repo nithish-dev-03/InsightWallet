@@ -48,16 +48,16 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<TransactionEntity> getTransactionById(String id) async {
     final response = await _api.get(ApiConfig.transactionById(id));
-    final model =
-        TransactionModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    final model = TransactionModel.fromJson(
+        response.data['data'] as Map<String, dynamic>);
     return model.toEntity();
   }
 
   @override
   Future<TransactionEntity> createTransaction(Map<String, dynamic> data) async {
     final response = await _api.post(ApiConfig.transactions, data: data);
-    final model =
-        TransactionModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    final model = TransactionModel.fromJson(
+        response.data['data'] as Map<String, dynamic>);
     return model.toEntity();
   }
 
@@ -65,8 +65,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
   Future<TransactionEntity> updateTransaction(
       String id, Map<String, dynamic> data) async {
     final response = await _api.put(ApiConfig.transactionById(id), data: data);
-    final model =
-        TransactionModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    final model = TransactionModel.fromJson(
+        response.data['data'] as Map<String, dynamic>);
     return model.toEntity();
   }
 

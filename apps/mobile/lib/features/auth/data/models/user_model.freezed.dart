@@ -178,7 +178,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
 class _$UserModelImpl implements _UserModel {
   const _$UserModelImpl(
       {required this.id,
-      required this.name,
+      this.name = '',
       required this.email,
       this.avatar,
       this.currency = 'USD',
@@ -191,6 +191,7 @@ class _$UserModelImpl implements _UserModel {
   @override
   final String id;
   @override
+  @JsonKey()
   final String name;
   @override
   final String email;
@@ -249,7 +250,7 @@ class _$UserModelImpl implements _UserModel {
 abstract class _UserModel implements UserModel {
   const factory _UserModel(
       {required final String id,
-      required final String name,
+      final String name,
       required final String email,
       final String? avatar,
       final String currency,

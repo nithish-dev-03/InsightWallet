@@ -99,9 +99,7 @@ class _AppearanceSection extends ConsumerWidget {
                   ],
                   onChanged: (v) {
                     if (v != null) {
-                      ref
-                          .read(settingsProvider.notifier)
-                          .updateLanguage(v);
+                      ref.read(settingsProvider.notifier).updateLanguage(v);
                     }
                   },
                 ),
@@ -120,8 +118,21 @@ class _CurrencySection extends ConsumerWidget {
   const _CurrencySection({required this.settings});
 
   static const _currencies = [
-    'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY',
-    'INR', 'BRL', 'KRW', 'MXN', 'SGD', 'HKD', 'NZD',
+    'USD',
+    'EUR',
+    'GBP',
+    'JPY',
+    'CAD',
+    'AUD',
+    'CHF',
+    'CNY',
+    'INR',
+    'BRL',
+    'KRW',
+    'MXN',
+    'SGD',
+    'HKD',
+    'NZD',
   ];
 
   @override
@@ -166,9 +177,8 @@ class _CurrencySection extends ConsumerWidget {
                     child: Text(
                       currency,
                       style: AppTypography.bodySm.copyWith(
-                        color: isSelected
-                            ? Colors.white
-                            : AppColors.darkOnSurface,
+                        color:
+                            isSelected ? Colors.white : AppColors.darkOnSurface,
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w400,
                       ),
@@ -303,8 +313,11 @@ class _DataSection extends ConsumerWidget {
               _SettingsTile(
                 icon: Icons.download,
                 title: 'Export Data',
+                subtitle: 'Download your transactions history',
                 trailing: DropdownButton<String>(
-                  value: ref.watch(settingsProvider).valueOrNull?.exportFormat ?? 'csv',
+                  value:
+                      ref.watch(settingsProvider).valueOrNull?.exportFormat ??
+                          'csv',
                   underline: const SizedBox(),
                   dropdownColor: AppColors.darkSurface,
                   items: const [
@@ -313,9 +326,7 @@ class _DataSection extends ConsumerWidget {
                   ],
                   onChanged: (v) {
                     if (v != null) {
-                      ref
-                          .read(settingsProvider.notifier)
-                          .updateExportFormat(v);
+                      ref.read(settingsProvider.notifier).updateExportFormat(v);
                     }
                   },
                 ),
@@ -329,6 +340,7 @@ class _DataSection extends ConsumerWidget {
               _SettingsTile(
                 icon: Icons.delete_sweep,
                 title: 'Clear Cache',
+                subtitle: 'Free up local storage',
                 onTap: () {
                   ref.read(settingsProvider.notifier).clearCache();
                   ScaffoldMessenger.of(context).showSnackBar(

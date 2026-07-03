@@ -15,10 +15,31 @@ final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   );
 });
 
-final profileProvider =
-    AsyncNotifierProvider<ProfileNotifier, ProfileEntity>(
+final profileProvider = AsyncNotifierProvider<ProfileNotifier, ProfileEntity>(
   ProfileNotifier.new,
 );
+
+final currencySymbolProvider = Provider<String>((ref) {
+  final profile = ref.watch(profileProvider).valueOrNull;
+  final currencyCode = profile?.currency ?? 'USD';
+  switch (currencyCode.toUpperCase()) {
+    case 'INR':
+      return '₹';
+    case 'EUR':
+      return '€';
+    case 'GBP':
+      return '£';
+    case 'JPY':
+      return '¥';
+    case 'AUD':
+      return 'A\$';
+    case 'CAD':
+      return 'C\$';
+    case 'USD':
+    default:
+      return '\$';
+  }
+});
 
 class ProfileNotifier extends AsyncNotifier<ProfileEntity> {
   @override
@@ -32,8 +53,16 @@ class ProfileNotifier extends AsyncNotifier<ProfileEntity> {
     return repo.getProfile();
   }
 
-  Future<void> updateProfile(ProfileEntity profile) async {
+  Future<void> createProfile(ProfileEntity profile) async {
     state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() {
+      final repo = ref.read(profileRepositoryProvider);
+      return repo.createProfile(profile);
+    });
+  }
+
+  Future<void> updateProfile(ProfileEntity profile) async {
+    state = const AsyncLoading<ProfileEntity>().copyWithPrevious(state);
     state = await AsyncValue.guard(() {
       final repo = ref.read(profileRepositoryProvider);
       return repo.updateProfile(profile);

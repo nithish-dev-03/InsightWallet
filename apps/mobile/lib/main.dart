@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
 import 'core/services/hive_service.dart';
 import 'core/theme/app_theme.dart';
+import 'features/profile/presentation/providers/profile_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,14 +38,30 @@ class InsightWalletApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = AppRouter.create();
+    final router = ref.watch(routerProvider);
+    final profileAsync = ref.watch(profileProvider);
+
+    final themeStr = profileAsync.valueOrNull?.theme ?? 'system';
+    ThemeMode themeMode;
+    switch (themeStr) {
+      case 'dark':
+        themeMode = ThemeMode.dark;
+        break;
+      case 'light':
+        themeMode = ThemeMode.light;
+        break;
+      case 'system':
+      default:
+        themeMode = ThemeMode.system;
+        break;
+    }
 
     return MaterialApp.router(
       title: 'InsightWallet',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       routerConfig: router,
     );
   }

@@ -21,11 +21,17 @@ class EdgeInsetsHelper {
   static const EdgeInsets allXl = EdgeInsets.all(Insets.xl);
   static const EdgeInsets allXxl = EdgeInsets.all(Insets.xxl);
 
-  static const EdgeInsets horizontalSm = EdgeInsets.symmetric(horizontal: Insets.sm);
-  static const EdgeInsets horizontalMd = EdgeInsets.symmetric(horizontal: Insets.md);
-  static const EdgeInsets horizontalLg = EdgeInsets.symmetric(horizontal: Insets.lg);
+  static const EdgeInsets horizontalSm =
+      EdgeInsets.symmetric(horizontal: Insets.sm);
+  static const EdgeInsets horizontalMd =
+      EdgeInsets.symmetric(horizontal: Insets.md);
+  static const EdgeInsets horizontalLg =
+      EdgeInsets.symmetric(horizontal: Insets.lg);
 
-  static const EdgeInsets verticalSm = EdgeInsets.symmetric(vertical: Insets.sm);
-  static const EdgeInsets verticalMd = EdgeInsets.symmetric(vertical: Insets.md);
-  static const EdgeInsets verticalLg = EdgeInsets.symmetric(vertical: Insets.lg);
+  static const EdgeInsets verticalSm =
+      EdgeInsets.symmetric(vertical: Insets.sm);
+  static const EdgeInsets verticalMd =
+      EdgeInsets.symmetric(vertical: Insets.md);
+  static const EdgeInsets verticalLg =
+      EdgeInsets.symmetric(vertical: Insets.lg);
 }

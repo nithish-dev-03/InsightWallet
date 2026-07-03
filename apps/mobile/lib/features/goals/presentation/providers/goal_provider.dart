@@ -50,13 +50,15 @@ class GoalsNotifier extends AsyncNotifier<List<GoalEntity>> {
 
   double get totalTarget {
     return state.whenOrNull(data: (list) {
-      return list.fold<double>(0, (sum, g) => sum + g.targetAmount);
-    }) ?? 0;
+          return list.fold<double>(0, (sum, g) => sum + g.targetAmount);
+        }) ??
+        0;
   }
 
   double get totalSaved {
     return state.whenOrNull(data: (list) {
-      return list.fold<double>(0, (sum, g) => sum + g.currentAmount);
-    }) ?? 0;
+          return list.fold<double>(0, (sum, g) => sum + g.currentAmount);
+        }) ??
+        0;
   }
 }

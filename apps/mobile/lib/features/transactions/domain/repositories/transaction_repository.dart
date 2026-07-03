@@ -14,6 +14,7 @@ abstract class TransactionRepository {
   });
   Future<TransactionEntity> getTransactionById(String id);
   Future<TransactionEntity> createTransaction(Map<String, dynamic> data);
-  Future<TransactionEntity> updateTransaction(String id, Map<String, dynamic> data);
+  Future<TransactionEntity> updateTransaction(
+      String id, Map<String, dynamic> data);
   Future<void> deleteTransaction(String id);
 }

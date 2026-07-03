@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../theme/app_colors.dart';
 import '../../theme/app_typography.dart';
 import '../../utils/format_utils.dart';
+import '../../../features/profile/presentation/providers/profile_provider.dart';
 
 enum AmountType { income, expense, neutral }
 
-class AmountText extends StatelessWidget {
+class AmountText extends ConsumerWidget {
   final double amount;
   final AmountType type;
   final double? fontSize;
@@ -27,7 +29,7 @@ class AmountText extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Color color = switch (type) {
       AmountType.income => AppColors.income,
       AmountType.expense => AppColors.expense,
@@ -40,10 +42,12 @@ class AmountText extends StatelessWidget {
       AmountType.neutral => '',
     };
 
+    final activeSymbol = currencySymbol ?? ref.watch(currencySymbolProvider);
+
     final formatted = FormatUtils.formatCurrency(
       amount,
       showCents: showCents,
-      currencySymbol: currencySymbol,
+      currencySymbol: activeSymbol,
     );
 
     final textStyle = style ??

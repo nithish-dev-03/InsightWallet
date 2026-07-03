@@ -306,8 +306,9 @@ class _NotificationItem extends StatelessWidget {
                         Text(
                           notification.title,
                           style: AppTypography.bodyMd.copyWith(
-                            fontWeight:
-                                notification.read ? FontWeight.w400 : FontWeight.w600,
+                            fontWeight: notification.read
+                                ? FontWeight.w400
+                                : FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: Insets.xs),

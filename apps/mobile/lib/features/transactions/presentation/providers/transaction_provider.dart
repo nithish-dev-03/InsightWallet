@@ -25,9 +25,8 @@ final createTransactionProvider =
   return repository.createTransaction(data);
 });
 
-final updateTransactionProvider =
-    FutureProvider.family<TransactionEntity, ({String id, Map<String, dynamic> data})>(
-        (ref, params) async {
+final updateTransactionProvider = FutureProvider.family<TransactionEntity,
+    ({String id, Map<String, dynamic> data})>((ref, params) async {
   final repository = ref.read(_transactionRepositoryProvider);
   return repository.updateTransaction(params.id, params.data);
 });

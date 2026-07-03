@@ -87,7 +87,8 @@ class SettingsNotifier extends AsyncNotifier<SettingsEntity> {
     final updated = current.copyWith(
       privacy: PrivacyConfig(
         showBalance: key == 'showBalance' ? value : p.showBalance,
-        showTransactions: key == 'showTransactions' ? value : p.showTransactions,
+        showTransactions:
+            key == 'showTransactions' ? value : p.showTransactions,
       ),
     );
     await updateSettings(updated);

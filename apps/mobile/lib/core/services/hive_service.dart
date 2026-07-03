@@ -19,7 +19,8 @@ class HiveService {
   // ── Transactions Cache ──────────────────────
   static Box _transactions() => Hive.box(_transactionsBox);
 
-  static Future<void> cacheTransactions(List<Map<String, dynamic>> transactions) async {
+  static Future<void> cacheTransactions(
+      List<Map<String, dynamic>> transactions) async {
     final box = _transactions();
     await box.clear();
     for (int i = 0; i < transactions.length; i++) {
@@ -69,7 +70,8 @@ class HiveService {
   // ── Categories Cache ────────────────────────
   static Box _categories() => Hive.box(_categoriesBox);
 
-  static Future<void> cacheCategories(List<Map<String, dynamic>> categories) async {
+  static Future<void> cacheCategories(
+      List<Map<String, dynamic>> categories) async {
     final box = _categories();
     await box.clear();
     for (int i = 0; i < categories.length; i++) {

@@ -45,25 +45,22 @@ class TransactionListNotifier extends AsyncNotifier<List<TransactionEntity>> {
     if (isLoadSampleData) {
       final json = await SampleDataService.getTransactionsData();
       final list = json['data'] as List<dynamic>;
-      final transactions = list
-          .map((e) {
-            final model =
-                TransactionModel.fromJson(e as Map<String, dynamic>);
-            return TransactionEntity(
-              id: model.id,
-              amount: model.amount,
-              type: model.type,
-              category: model.category,
-              categoryIcon: model.categoryIcon,
-              categoryColor: model.categoryColor,
-              description: model.description,
-              date: model.date,
-              note: model.note,
-              tags: model.tags,
-              receiptUrl: model.receiptUrl,
-            );
-          })
-          .toList();
+      final transactions = list.map((e) {
+        final model = TransactionModel.fromJson(e as Map<String, dynamic>);
+        return TransactionEntity(
+          id: model.id,
+          amount: model.amount,
+          type: model.type,
+          category: model.category,
+          categoryIcon: model.categoryIcon,
+          categoryColor: model.categoryColor,
+          description: model.description,
+          date: model.date,
+          note: model.note,
+          tags: model.tags,
+          receiptUrl: model.receiptUrl,
+        );
+      }).toList();
       _hasMore = false;
       return transactions;
     }
@@ -84,7 +81,9 @@ class TransactionListNotifier extends AsyncNotifier<List<TransactionEntity>> {
   Future<void> loadMore() async {
     if (!_hasMore) return;
     final currentState = state;
-    if (currentState is AsyncData && currentState.requireValue.isEmpty && _currentPage > 1) return;
+    if (currentState is AsyncData &&
+        currentState.requireValue.isEmpty &&
+        _currentPage > 1) return;
 
     _currentPage++;
     try {
@@ -114,6 +113,7 @@ class TransactionListNotifier extends AsyncNotifier<List<TransactionEntity>> {
 
   Future<void> search(String query) async {
     final currentFilter = _filter;
-    await applyFilter(currentFilter.copyWith(search: query.isEmpty ? null : query));
+    await applyFilter(
+        currentFilter.copyWith(search: query.isEmpty ? null : query));
   }
 }

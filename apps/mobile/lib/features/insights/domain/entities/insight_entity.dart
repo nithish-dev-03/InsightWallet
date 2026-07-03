@@ -13,10 +13,12 @@ class MonthlySummary extends Equatable {
     required this.lastMonthExpense,
   });
 
-  double get incomeChange =>
-      lastMonthIncome > 0 ? ((income - lastMonthIncome) / lastMonthIncome * 100) : 0;
-  double get expenseChange =>
-      lastMonthExpense > 0 ? ((expense - lastMonthExpense) / lastMonthExpense * 100) : 0;
+  double get incomeChange => lastMonthIncome > 0
+      ? ((income - lastMonthIncome) / lastMonthIncome * 100)
+      : 0;
+  double get expenseChange => lastMonthExpense > 0
+      ? ((expense - lastMonthExpense) / lastMonthExpense * 100)
+      : 0;
 
   @override
   List<Object?> get props =>

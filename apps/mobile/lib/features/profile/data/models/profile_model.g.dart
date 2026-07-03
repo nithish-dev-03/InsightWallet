@@ -16,6 +16,9 @@ _$ProfileModelImpl _$$ProfileModelImplFromJson(Map<String, dynamic> json) =>
       theme: json['theme'] as String? ?? 'dark',
       emailVerified: json['emailVerified'] as bool? ?? false,
       biometricEnabled: json['biometricEnabled'] as bool? ?? false,
+      title: json['title'] as String? ?? '',
+      bio: json['bio'] as String? ?? '',
+      location: json['location'] as String? ?? '',
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
@@ -29,5 +32,8 @@ Map<String, dynamic> _$$ProfileModelImplToJson(_$ProfileModelImpl instance) =>
       'theme': instance.theme,
       'emailVerified': instance.emailVerified,
       'biometricEnabled': instance.biometricEnabled,
+      'title': instance.title,
+      'bio': instance.bio,
+      'location': instance.location,
       'createdAt': instance.createdAt.toIso8601String(),
     };

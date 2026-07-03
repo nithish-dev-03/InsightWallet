@@ -32,7 +32,9 @@ class GlassPanel extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: borderRadius,
-            border: border ?? Border.all(color: Colors.white.withValues(alpha: 0.05), width: 1.0),
+            border: border ??
+                Border.all(
+                    color: Colors.white.withValues(alpha: 0.05), width: 1.0),
           ),
           child: child,
         ),
@@ -44,7 +46,8 @@ class GlassPanel extends StatelessWidget {
 class InteractiveButton extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
-  const InteractiveButton({super.key, required this.child, required this.onTap});
+  const InteractiveButton(
+      {super.key, required this.child, required this.onTap});
 
   @override
   State<InteractiveButton> createState() => _InteractiveButtonState();
