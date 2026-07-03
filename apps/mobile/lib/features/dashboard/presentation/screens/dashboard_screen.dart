@@ -12,6 +12,7 @@ import '../../../../core/utils/format_utils.dart';
 import '../../domain/entities/dashboard_entity.dart';
 import '../providers/dashboard_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
+import '../../../profile/domain/entities/profile_entity.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -19,6 +20,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(dashboardProvider);
+    final profileAsync = ref.watch(profileProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -48,8 +50,12 @@ class DashboardScreen extends ConsumerWidget {
             ),
             data: (data) {
               final currencySymbol = ref.watch(currencySymbolProvider);
+              final profile = profileAsync.valueOrNull;
               return _DashboardContent(
-                  data: data, currencySymbol: currencySymbol);
+                data: data,
+                currencySymbol: currencySymbol,
+                profile: profile,
+              );
             },
           ),
         ),
@@ -61,8 +67,13 @@ class DashboardScreen extends ConsumerWidget {
 class _DashboardContent extends StatefulWidget {
   final DashboardEntity data;
   final String currencySymbol;
+  final ProfileEntity? profile;
 
-  const _DashboardContent({required this.data, required this.currencySymbol});
+  const _DashboardContent({
+    required this.data,
+    required this.currencySymbol,
+    this.profile,
+  });
 
   @override
   State<_DashboardContent> createState() => _DashboardContentState();
@@ -119,25 +130,62 @@ class _DashboardContentState extends State<_DashboardContent> {
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: Insets.xs),
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: isDark
-                  ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
-                  : const Color(0xFF3525CD).withValues(alpha: 0.2),
-              width: 2,
-            ),
-          ),
-          child: const ClipRRect(
-            borderRadius: AppRadius.brFull,
-            child: Image(
-              image: NetworkImage(
-                'https://lh3.googleusercontent.com/aida-public/AB6AXuDc4P91ASw0u4e7bnbpZ9-x-GF05UH8kSUPdR07iBoKzIMmVgLRm-lwjIGKLmfG8_oPxiEt2qy0WiUtwg1n0KeSiFDsiBnCNFHx4xD99Yuc13RzEK9zlXCW30ByP9f0LhYj5oBjmfbYxatzpqjaB7Afu6NUZnEryTpGKksFV5-46hIXezwFTuyyaqBEeGIlGJDD2Kz0TBLbXw0zxeqyuDnu3k9d9kxXp6qwh5OVwin6XNftIQlu1DNP745qXNRLEFZSjDL1EPctMEC6',
+        GestureDetector(
+          onTap: () => context.push('/profile'),
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isDark
+                    ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
+                    : const Color(0xFF3525CD).withValues(alpha: 0.2),
+                width: 2,
               ),
-              fit: BoxFit.cover,
+            ),
+            child: ClipRRect(
+              borderRadius: AppRadius.brFull,
+              child: widget.profile?.avatar != null &&
+                      widget.profile!.avatar!.isNotEmpty
+                  ? Image.network(
+                      widget.profile!.avatar!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: isDark
+                            ? const Color(0xFF221E28)
+                            : const Color(0xFFF0ECF9),
+                        alignment: Alignment.center,
+                        child: Text(
+                          widget.profile?.name.isNotEmpty == true
+                              ? widget.profile!.name[0].toUpperCase()
+                              : 'U',
+                          style: TextStyle(
+                            color: isDark
+                                ? const Color(0xFFD2BBFF)
+                                : const Color(0xFF3525CD),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      color: isDark
+                          ? const Color(0xFF221E28)
+                          : const Color(0xFFF0ECF9),
+                      alignment: Alignment.center,
+                      child: Text(
+                        widget.profile?.name.isNotEmpty == true
+                            ? widget.profile!.name[0].toUpperCase()
+                            : 'U',
+                        style: TextStyle(
+                          color: isDark
+                              ? const Color(0xFFD2BBFF)
+                              : const Color(0xFF3525CD),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
             ),
           ),
         ),
@@ -146,11 +194,15 @@ class _DashboardContentState extends State<_DashboardContent> {
   }
 
   Widget _buildGreeting(BuildContext context) {
+    final name = widget.profile?.name;
+    final greetingName = name != null && name.trim().isNotEmpty
+        ? name.trim().split(' ').first
+        : 'User';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello, Alex',
+          'Hello, $greetingName',
           style: AppTypography.headlineMd.copyWith(
             fontWeight: FontWeight.w700,
             color: Theme.of(context).colorScheme.onSurface,

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/services/api_service.dart';
 import '../../../../core/services/storage_service.dart';
@@ -26,42 +25,52 @@ class DashboardNotifier extends AsyncNotifier<DashboardEntity> {
     return _fetchDashboard();
   }
 
+  Future<DashboardEntity> _loadSampleDashboard() async {
+    final json = await SampleDataService.getDashboardData();
+    final data = json['data'] as Map<String, dynamic>;
+    final dashboardData = DashboardData.fromJson(data);
+    return DashboardEntity(
+      balance: dashboardData.balance,
+      monthlyIncome: dashboardData.monthlyIncome,
+      monthlyExpense: dashboardData.monthlyExpense,
+      savings: dashboardData.savings,
+      budgetRemaining: dashboardData.budgetRemaining,
+      recentTransactions: dashboardData.recentTransactions
+          .map((t) => TransactionSummaryEntity(
+                id: t.id,
+                description: t.description,
+                amount: t.amount,
+                type: t.type,
+                category: t.category,
+                categoryIcon: t.categoryIcon,
+                date: t.date,
+              ))
+          .toList(),
+      insight: dashboardData.insight,
+      chartData: dashboardData.chartData,
+      spendingBreakdown: dashboardData.spendingBreakdown
+          .map((c) => CategoryBreakdownEntity(
+                category: c.category,
+                amount: c.amount,
+                percentage: c.percentage,
+                color: c.color,
+              ))
+          .toList(),
+    );
+  }
+
   Future<DashboardEntity> _fetchDashboard() async {
-    if (isLoadSampleData) {
-      final json = await SampleDataService.getDashboardData();
-      final data = json['data'] as Map<String, dynamic>;
-      final dashboardData = DashboardData.fromJson(data);
-      return DashboardEntity(
-        balance: dashboardData.balance,
-        monthlyIncome: dashboardData.monthlyIncome,
-        monthlyExpense: dashboardData.monthlyExpense,
-        savings: dashboardData.savings,
-        budgetRemaining: dashboardData.budgetRemaining,
-        recentTransactions: dashboardData.recentTransactions
-            .map((t) => TransactionSummaryEntity(
-                  id: t.id,
-                  description: t.description,
-                  amount: t.amount,
-                  type: t.type,
-                  category: t.category,
-                  categoryIcon: t.categoryIcon,
-                  date: t.date,
-                ))
-            .toList(),
-        insight: dashboardData.insight,
-        chartData: dashboardData.chartData,
-        spendingBreakdown: dashboardData.spendingBreakdown
-            .map((c) => CategoryBreakdownEntity(
-                  category: c.category,
-                  amount: c.amount,
-                  percentage: c.percentage,
-                  color: c.color,
-                ))
-            .toList(),
-      );
+    try {
+      final repository = ref.read(_dashboardRepositoryProvider);
+      final dashboard = await repository.getDashboardData();
+      // A dashboard is considered empty if balance is 0 and recentTransactions is empty
+      if (dashboard.balance != 0 || dashboard.recentTransactions.isNotEmpty) {
+        return dashboard;
+      }
+      throw Exception('Dashboard is empty');
+    } catch (e) {
+      return _loadSampleDashboard();
     }
-    final repository = ref.read(_dashboardRepositoryProvider);
-    return repository.getDashboardData();
   }
 
   Future<void> refresh() async {

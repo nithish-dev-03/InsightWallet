@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/providers/providers.dart';
 import '../../data/models/profile_model.dart';
@@ -44,13 +43,18 @@ final currencySymbolProvider = Provider<String>((ref) {
 class ProfileNotifier extends AsyncNotifier<ProfileEntity> {
   @override
   Future<ProfileEntity> build() async {
-    if (isLoadSampleData) {
+    try {
+      final repo = ref.read(profileRepositoryProvider);
+      final profile = await repo.getProfile();
+      if (profile.name.trim().isNotEmpty) {
+        return profile;
+      }
+      throw Exception('Profile is empty');
+    } catch (e) {
       final json = await SampleDataService.getProfileData();
       final data = json['data'] as Map<String, dynamic>;
       return ProfileModel.fromJson(data).toEntity();
     }
-    final repo = ref.read(profileRepositoryProvider);
-    return repo.getProfile();
   }
 
   Future<void> createProfile(ProfileEntity profile) async {

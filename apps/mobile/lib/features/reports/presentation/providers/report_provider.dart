@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/providers/providers.dart';
 import '../../data/models/report_data.dart';
@@ -18,12 +17,22 @@ final selectedReportPeriodProvider = StateProvider<ReportPeriod>(
 );
 
 final reportProvider = FutureProvider<ReportEntity>((ref) async {
-  if (isLoadSampleData) {
+  final period = ref.watch(selectedReportPeriodProvider);
+  final repo = ref.watch(reportRepositoryProvider);
+
+  Future<ReportEntity> loadSample() async {
     final json = await SampleDataService.getReportsData();
     final data = json['data'] as Map<String, dynamic>;
     return ReportData.fromJson(data).toEntity();
   }
-  final period = ref.watch(selectedReportPeriodProvider);
-  final repo = ref.watch(reportRepositoryProvider);
-  return repo.getReport(period);
+
+  try {
+    final report = await repo.getReport(period);
+    if (report.totalIncome != 0.0 || report.totalExpense != 0.0) {
+      return report;
+    }
+    throw Exception('Report is empty');
+  } catch (e) {
+    return loadSample();
+  }
 });

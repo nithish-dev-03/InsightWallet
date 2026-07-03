@@ -14,6 +14,7 @@ import '../../domain/entities/report_entity.dart';
 import '../../domain/repositories/report_repository.dart';
 import '../providers/report_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
+import '../../../profile/domain/entities/profile_entity.dart';
 
 class ReportsScreen extends ConsumerWidget {
   const ReportsScreen({super.key});
@@ -65,6 +66,8 @@ class _ReportsContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedPeriod = ref.watch(selectedReportPeriodProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final profileAsync = ref.watch(profileProvider);
+    final profile = profileAsync.valueOrNull;
 
     final textPrimary = isDark ? Colors.white : AppColors.lightOnSurface;
     final textSecondary = isDark
@@ -76,7 +79,7 @@ class _ReportsContent extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.only(bottom: Insets.xxl),
       children: [
-        _buildHeader(context, isDark, textPrimary, textSecondary),
+        _buildHeader(context, isDark, textPrimary, textSecondary, profile),
         _buildPeriodSelector(context, ref, selectedPeriod, isDark),
         const SizedBox(height: Insets.lg),
         _buildCashFlowTrendSection(context, isDark, currencySymbol),
@@ -93,7 +96,7 @@ class _ReportsContent extends ConsumerWidget {
   }
 
   Widget _buildHeader(BuildContext context, bool isDark, Color textPrimary,
-      Color textSecondary) {
+      Color textSecondary, ProfileEntity? profile) {
     return Padding(
       padding:
           const EdgeInsets.fromLTRB(Insets.md, Insets.md, Insets.md, Insets.sm),
@@ -143,25 +146,63 @@ class _ReportsContent extends ConsumerWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
           const SizedBox(width: Insets.xs),
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isDark
-                    ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
-                    : const Color(0xFF3525CD).withValues(alpha: 0.2),
-                width: 2,
-              ),
-            ),
-            child: const ClipRRect(
-              borderRadius: AppRadius.brFull,
-              child: Image(
-                image: NetworkImage(
-                  'https://lh3.googleusercontent.com/aida-public/AB6AXuDc4P91ASw0u4e7bnbpZ9-x-GF05UH8kSUPdR07iBoKzIMmVgLRm-lwjIGKLmfG8_oPxiEt2qy0WiUtwg1n0KeSiFDsiBnCNFHx4xD99Yuc13RzEK9zlXCW30ByP9f0LhYj5oBjmfbYxatzpqjaB7Afu6NUZnEryTpGKksFV5-46hIXezwFTuyyaqBEeGIlGJDD2Kz0TBLbXw0zxeqyuDnu3k9d9kxXp6qwh5OVwin6XNftIQlu1DNP745qXNRLEFZSjDL1EPctMEC6',
+          GestureDetector(
+            onTap: () => context.push('/profile'),
+            child: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark
+                      ? const Color(0xFFD2BBFF).withValues(alpha: 0.2)
+                      : const Color(0xFF3525CD).withValues(alpha: 0.2),
+                  width: 2,
                 ),
-                fit: BoxFit.cover,
+              ),
+              child: ClipRRect(
+                borderRadius: AppRadius.brFull,
+                child: profile?.avatar != null && profile!.avatar!.isNotEmpty
+                    ? Image.network(
+                        profile.avatar!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: isDark
+                              ? const Color(0xFF221E28)
+                              : const Color(0xFFF0ECF9),
+                          alignment: Alignment.center,
+                          child: Text(
+                            profile.name.isNotEmpty == true
+                                ? profile.name[0].toUpperCase()
+                                : 'U',
+                            style: TextStyle(
+                              color: isDark
+                                  ? const Color(0xFFD2BBFF)
+                                  : const Color(0xFF3525CD),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        color: isDark
+                            ? const Color(0xFF221E28)
+                            : const Color(0xFFF0ECF9),
+                        alignment: Alignment.center,
+                        child: Text(
+                          profile?.name.isNotEmpty == true
+                              ? profile!.name[0].toUpperCase()
+                              : 'U',
+                          style: TextStyle(
+                            color: isDark
+                                ? const Color(0xFFD2BBFF)
+                                : const Color(0xFF3525CD),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),
