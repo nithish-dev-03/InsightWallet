@@ -19,6 +19,7 @@ import {
   notificationRoutes,
   profileRoutes,
   settingRoutes,
+  statementRoutes,
 } from './routes/index.js';
 
 const app = express();
@@ -46,6 +47,7 @@ app.use('/api/v1/insights', insightRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/settings', settingRoutes);
+app.use('/api/v1/statements', statementRoutes);
 
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, message: 'OK', data: { uptime: process.uptime() } });

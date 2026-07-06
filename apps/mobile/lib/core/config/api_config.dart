@@ -24,6 +24,7 @@ class ApiConfig {
 
   // ── Transactions ────────────────────────────
   static const String transactions = '$apiPrefix/transactions';
+  static const String bulkTransactions = '$apiPrefix/transactions/bulk';
   static String transactionById(String id) => '$apiPrefix/transactions/$id';
 
   // ── Categories ──────────────────────────────
@@ -50,4 +51,8 @@ class ApiConfig {
 
   // ── Insights ────────────────────────────────
   static const String insights = '$apiPrefix/insights';
+
+  // ── Statements ──────────────────────────────
+  static const String importStatement = '$apiPrefix/statements/import';
+  static const String saveStatementImport = '$apiPrefix/statements/save-import';
 }

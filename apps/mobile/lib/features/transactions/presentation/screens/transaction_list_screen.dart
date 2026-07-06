@@ -696,7 +696,7 @@ class _TransactionListItemWidget extends StatelessWidget {
               ),
               const SizedBox(width: Insets.sm),
               Text(
-                '${isIncome ? '+' : '-'}${FormatUtils.formatCurrency(transaction.amount, currencySymbol: currencySymbol)}',
+                '${isIncome ? '+' : ''}${FormatUtils.formatCurrency(transaction.amount, currencySymbol: currencySymbol)}',
                 style: AppTypography.bodyMd.copyWith(
                   fontWeight: FontWeight.bold,
                   color: amountColor,

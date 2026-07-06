@@ -20,6 +20,7 @@ const auth = async (req, res, next) => {
 
     req.user = authRecord;
     req.userId = authRecord._id;
+    req.userEmail = authRecord.email;
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

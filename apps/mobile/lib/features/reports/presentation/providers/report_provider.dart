@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/providers/providers.dart';
 import '../../data/models/report_data.dart';
@@ -28,11 +29,9 @@ final reportProvider = FutureProvider<ReportEntity>((ref) async {
 
   try {
     final report = await repo.getReport(period);
-    if (report.totalIncome != 0.0 || report.totalExpense != 0.0) {
-      return report;
-    }
-    throw Exception('Report is empty');
+    return report;
   } catch (e) {
+    if (!isLoadSampleData) rethrow;
     return loadSample();
   }
 });

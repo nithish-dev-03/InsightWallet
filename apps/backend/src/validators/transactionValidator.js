@@ -10,7 +10,12 @@ export const createTransactionValidator = [
     .isFloat({ min: 0.01 }).withMessage('Amount must be a positive number.'),
   body('category')
     .optional()
-    .isMongoId().withMessage('Invalid category ID.'),
+    .custom((value) => {
+      if (typeof value !== 'string' || value.trim() === '') {
+        throw new Error('Category must be a non-empty string.');
+      }
+      return true;
+    }),
   body('description')
     .optional()
     .trim()
@@ -43,7 +48,12 @@ export const updateTransactionValidator = [
     .isFloat({ min: 0.01 }).withMessage('Amount must be a positive number.'),
   body('category')
     .optional()
-    .isMongoId().withMessage('Invalid category ID.'),
+    .custom((value) => {
+      if (typeof value !== 'string' || value.trim() === '') {
+        throw new Error('Category must be a non-empty string.');
+      }
+      return true;
+    }),
   body('description')
     .optional()
     .trim()

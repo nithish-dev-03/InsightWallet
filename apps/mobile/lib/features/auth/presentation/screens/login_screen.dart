@@ -102,13 +102,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       state.whenOrNull(
         authenticated: (user) {
           AppRouter.setAuthenticated(true);
+          print("Auth testing ${user.name.isEmpty}");
           if (user.name.isEmpty) {
-            AppRouter.setNeedsProfileSetup(true);
+            // AppRouter.setNeedsProfileSetup(true);
             context.go('/auth/profile-setup');
           } else {
-            AppRouter.setNeedsProfileSetup(false);
+            // AppRouter.setNeedsProfileSetup(false);
             context.go('/dashboard');
           }
+          // context.go('/dashboard');
         },
       );
     });

@@ -17,6 +17,10 @@ import 'package:insightwallet/features/reports/presentation/screens/reports_scre
 import 'package:insightwallet/features/profile/presentation/screens/profile_screen.dart';
 import 'package:insightwallet/features/profile/presentation/screens/profile_setup_screen.dart';
 import 'package:insightwallet/features/notifications/presentation/screens/notification_list_screen.dart';
+import 'package:insightwallet/features/transactions/presentation/screens/add_transaction_screen.dart';
+import 'package:insightwallet/features/transactions/presentation/screens/transaction_detail_screen.dart';
+import 'package:insightwallet/features/transactions/presentation/screens/edit_transaction_screen.dart';
+import 'package:insightwallet/features/transactions/domain/entities/transaction_entity.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return AppRouter.create();
@@ -151,6 +155,31 @@ class AppRouter {
           path: '/notifications',
           name: 'notifications',
           builder: (_, __) => const NotificationListScreen(),
+        ),
+        GoRoute(
+          path: '/transactions/add',
+          name: 'add-transaction',
+          builder: (_, state) {
+            final autoPickReceipt = state.extra as bool? ?? false;
+            return AddTransactionScreen(autoPickReceipt: autoPickReceipt);
+          },
+        ),
+        GoRoute(
+          path: '/transactions/:id',
+          name: 'transaction-detail',
+          builder: (_, state) => TransactionDetailScreen(
+            transactionId: state.pathParameters['id'] ?? '',
+          ),
+          routes: [
+            GoRoute(
+              path: 'edit',
+              name: 'edit-transaction',
+              builder: (_, state) {
+                final transaction = state.extra as TransactionEntity;
+                return EditTransactionScreen(transaction: transaction);
+              },
+            ),
+          ],
         ),
         ShellRoute(
           builder: (_, __, child) => _MainShell(child: child),

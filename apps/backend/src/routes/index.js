@@ -7,3 +7,5 @@ export { default as insightRoutes } from './insightRoutes.js';
 export { default as notificationRoutes } from './notificationRoutes.js';
 export { default as profileRoutes } from './profileRoutes.js';
 export { default as settingRoutes } from './settingRoutes.js';
+export { default as statementRoutes } from './statementRoutes.js';
+

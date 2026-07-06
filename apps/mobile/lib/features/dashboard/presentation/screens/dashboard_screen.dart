@@ -13,6 +13,7 @@ import '../../domain/entities/dashboard_entity.dart';
 import '../providers/dashboard_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../profile/domain/entities/profile_entity.dart';
+import '../widgets/statement_import_dialog.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -220,8 +221,11 @@ class _DashboardContentState extends State<_DashboardContent> {
   }
 
   Widget _buildBalanceCard(BuildContext context) {
-    final balanceText = FormatUtils.formatCurrency(widget.data.balance,
-        currencySymbol: widget.currencySymbol);
+    final hasBalance = widget.data.balance != 0.0;
+    final balanceText = hasBalance
+        ? FormatUtils.formatCurrency(widget.data.balance,
+            currencySymbol: widget.currencySymbol)
+        : '0.00';
     final dotIndex = balanceText.indexOf('.');
     final dollarPart =
         dotIndex != -1 ? balanceText.substring(0, dotIndex) : balanceText;
@@ -323,9 +327,11 @@ class _DashboardContentState extends State<_DashboardContent> {
                               ),
                             ),
                             Text(
-                              FormatUtils.formatCurrency(
-                                  widget.data.monthlyIncome,
-                                  currencySymbol: widget.currencySymbol),
+                              widget.data.monthlyIncome != 0.0
+                                  ? FormatUtils.formatCurrency(
+                                      widget.data.monthlyIncome,
+                                      currencySymbol: widget.currencySymbol)
+                                  : '--',
                               style: AppTypography.bodyMd.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -363,9 +369,11 @@ class _DashboardContentState extends State<_DashboardContent> {
                               ),
                             ),
                             Text(
-                              FormatUtils.formatCurrency(
-                                  widget.data.monthlyExpense,
-                                  currencySymbol: widget.currencySymbol),
+                              widget.data.monthlyExpense != 0.0
+                                  ? FormatUtils.formatCurrency(
+                                      widget.data.monthlyExpense,
+                                      currencySymbol: widget.currencySymbol)
+                                  : '--',
                               style: AppTypography.bodyMd.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -397,7 +405,7 @@ class _DashboardContentState extends State<_DashboardContent> {
           iconColor: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
           bgColor: (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD))
               .withValues(alpha: 0.2),
-          onTap: () {},
+          onTap: () => context.push('/transactions/add'),
         ),
         const SizedBox(height: Insets.sm),
         _buildActionRow(
@@ -407,18 +415,38 @@ class _DashboardContentState extends State<_DashboardContent> {
           iconColor: isDark ? const Color(0xFFFFB784) : const Color(0xFF713700),
           bgColor: (isDark ? const Color(0xFFa15100) : const Color(0xFFffdcc6))
               .withValues(alpha: 0.25),
-          onTap: () {},
+          onTap: () => context.push('/transactions/add', extra: true),
         ),
         const SizedBox(height: Insets.sm),
         _buildActionRow(
           context,
-          icon: Icons.sync_alt,
-          label: 'Transfer Funds',
-          iconColor: isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be),
-          bgColor: (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff))
-              .withValues(alpha: 0.25),
-          onTap: () {},
+          icon: Icons.upload_file_rounded,
+          label: 'Import Bank Statement',
+          iconColor: isDark ? const Color(0xFFD2BBFF) : const Color(0xFF3525CD),
+          bgColor: (isDark ? const Color(0xFF7C3AED) : const Color(0xFF3525CD))
+              .withValues(alpha: 0.2),
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const StatementImportDialog(),
+            );
+          },
         ),
+        const SizedBox(height: Insets.sm),
+        // _buildActionRow(
+        //   context,
+        //   icon: Icons.sync_alt,
+        //   label: 'Transfer Funds',
+        //   iconColor: isDark ? const Color(0xFFD0BCFF) : const Color(0xFF5516be),
+        //   bgColor: (isDark ? const Color(0xFF571BC1) : const Color(0xFFe9ddff))
+        //       .withValues(alpha: 0.25),
+        //   onTap: () {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       const SnackBar(content: Text('Transfer feature coming soon!')),
+        //     );
+        //   },
+        // ),
       ],
     );
   }
@@ -781,9 +809,22 @@ class _DashboardContentState extends State<_DashboardContent> {
                 .withValues(alpha: 0.1),
           ),
           if (transactions.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(Insets.lg),
-              child: Center(child: Text('No recent transactions')),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Insets.lg, vertical: Insets.xl),
+              child: Center(
+                child: Text(
+                  '--',
+                  style: AppTypography.headlineMd.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withValues(alpha: 0.4),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
             )
           else
             ListView.separated(

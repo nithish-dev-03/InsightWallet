@@ -1,13 +1,8 @@
 import mongoose from 'mongoose';
 
-const transactionSchema = new mongoose.Schema(
+// ── Sub-document schema for a single transaction entry ──────────────────────
+const txItemSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-      index: true,
-    },
     type: {
       type: String,
       enum: ['income', 'expense'],
@@ -30,7 +25,6 @@ const transactionSchema = new mongoose.Schema(
     date: {
       type: Date,
       default: Date.now,
-      index: true,
     },
     tags: [{ type: String, trim: true }],
     receipt: {
@@ -53,11 +47,62 @@ const transactionSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    // Expose virtual `id` on sub-documents
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 
-transactionSchema.index({ user: 1, date: -1 });
-transactionSchema.index({ user: 1, category: 1 });
+// ── Top-level schema: one document per user ──────────────────────────────────
+const userTransactionSchema = new mongoose.Schema(
+  {
+    user_id: {
+      type: String, // user email
+      required: true,
+      unique: true,
+      index: true,
+      lowercase: true,
+      trim: true,
+    },
+    transactions: [txItemSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const Transaction = mongoose.model('Transaction', transactionSchema);
+const Transaction = mongoose.model('Transaction', userTransactionSchema);
 export default Transaction;
+
+// ── StatementImport (unchanged) ───────────────────────────────────────────────
+const statementImportSchema = new mongoose.Schema(
+  {
+    _id: {
+      type: String, // user email as id
+      required: true,
+    },
+    date_start: {
+      type: String,
+      required: true,
+    },
+    date_end: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const StatementImport = mongoose.model('StatementImport', statementImportSchema);

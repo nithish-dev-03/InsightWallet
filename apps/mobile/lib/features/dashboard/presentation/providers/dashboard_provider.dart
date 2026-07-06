@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/services/api_service.dart';
 import '../../../../core/services/storage_service.dart';
@@ -63,13 +64,22 @@ class DashboardNotifier extends AsyncNotifier<DashboardEntity> {
     try {
       final repository = ref.read(_dashboardRepositoryProvider);
       final dashboard = await repository.getDashboardData();
-      // A dashboard is considered empty if balance is 0 and recentTransactions is empty
-      if (dashboard.balance != 0 || dashboard.recentTransactions.isNotEmpty) {
-        return dashboard;
-      }
-      throw Exception('Dashboard is empty');
+      return dashboard;
     } catch (e) {
-      return _loadSampleDashboard();
+      if (isLoadSampleData) return _loadSampleDashboard();
+      // Return a zeroed default so the UI shows '--' placeholders
+      // instead of the error screen when there is no data yet.
+      return const DashboardEntity(
+        balance: 0,
+        monthlyIncome: 0,
+        monthlyExpense: 0,
+        savings: 0,
+        budgetRemaining: 0,
+        recentTransactions: [],
+        insight: '--',
+        chartData: [],
+        spendingBreakdown: [],
+      );
     }
   }
 

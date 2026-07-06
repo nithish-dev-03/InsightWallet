@@ -1,20 +1,19 @@
 import insightRepository from '../repositories/insightRepository.js';
-import transactionRepository from '../repositories/transactionRepository.js';
 import transactionService from './transactionService.js';
 
 class InsightService {
-  async generateMonthlySummary(userId, month, year) {
+  async generateMonthlySummary(userId, userEmail, month, year) {
     const existing = await insightRepository.findMonthlySummary(userId, month, year);
     if (existing) return existing;
 
-    const totals = await transactionService.getMonthlyTotals(userId, year, month);
+    const totals = await transactionService.getMonthlyTotals(userEmail, year, month);
     const incomeTotal = totals.find((t) => t._id === 'income')?.total || 0;
     const expenseTotal = totals.find((t) => t._id === 'expense')?.total || 0;
 
     const startOfMonth = new Date(year, month - 1, 1);
     const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
     const categoryData = await transactionService.getCategoryTotals(
-      userId,
+      userEmail,
       startOfMonth,
       endOfMonth
     );
@@ -22,7 +21,7 @@ class InsightService {
     const previousMonth = month === 1 ? 12 : month - 1;
     const previousYear = month === 1 ? year - 1 : year;
     const prevTotals = await transactionService.getMonthlyTotals(
-      userId,
+      userEmail,
       previousYear,
       previousMonth
     );
@@ -51,8 +50,8 @@ class InsightService {
     return insight;
   }
 
-  async generateSpendingPrediction(userId) {
-    const trends = await transactionService.getTrends(userId, 6);
+  async generateSpendingPrediction(userId, userEmail) {
+    const trends = await transactionService.getTrends(userEmail, 6);
 
     const expenseTrends = trends.filter((t) => t._id.type === 'expense');
     const avgExpense =
@@ -76,13 +75,13 @@ class InsightService {
     return insight;
   }
 
-  async generateBudgetSuggestions(userId) {
+  async generateBudgetSuggestions(userId, userEmail) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
 
     const categoryData = await transactionService.getCategoryTotals(
-      userId,
+      userEmail,
       startOfMonth,
       endOfMonth
     );
@@ -114,8 +113,8 @@ class InsightService {
     return insight;
   }
 
-  async generateExpenseTrends(userId) {
-    const trends = await transactionService.getTrends(userId, 6);
+  async generateExpenseTrends(userId, userEmail) {
+    const trends = await transactionService.getTrends(userEmail, 6);
 
     const formattedTrends = trends
       .filter((t) => t._id.type === 'expense')

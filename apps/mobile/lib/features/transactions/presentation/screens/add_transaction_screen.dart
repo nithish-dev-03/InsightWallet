@@ -14,7 +14,8 @@ import '../providers/transaction_provider.dart';
 import '../providers/transaction_list_provider.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
-  const AddTransactionScreen({super.key});
+  final bool autoPickReceipt;
+  const AddTransactionScreen({super.key, this.autoPickReceipt = false});
 
   @override
   ConsumerState<AddTransactionScreen> createState() =>
@@ -22,6 +23,16 @@ class AddTransactionScreen extends ConsumerStatefulWidget {
 }
 
 class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoPickReceipt) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _pickReceipt();
+      });
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();

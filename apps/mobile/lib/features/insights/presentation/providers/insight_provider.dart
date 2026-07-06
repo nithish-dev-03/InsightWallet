@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/providers/providers.dart';
 import '../../data/models/insight_model.dart';
@@ -23,11 +24,9 @@ final insightProvider = FutureProvider<InsightEntity>((ref) async {
 
   try {
     final insights = await repo.getInsights();
-    if (insights.monthlySummary.income != 0.0 || insights.monthlySummary.expense != 0.0) {
-      return insights;
-    }
-    throw Exception('Insights is empty');
+    return insights;
   } catch (e) {
+    if (!isLoadSampleData) rethrow;
     return loadSample();
   }
 });

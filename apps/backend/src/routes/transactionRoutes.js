@@ -3,6 +3,7 @@ import {
   getTransactions,
   getTransaction,
   createTransaction,
+  createBulkTransactions,
   updateTransaction,
   deleteTransaction,
   getSummary,
@@ -20,6 +21,7 @@ router.use(auth);
 
 router.get('/', getTransactions);
 router.get('/summary', getSummary);
+router.post('/bulk', createBulkTransactions);
 router.get('/:id', getTransaction);
 router.post('/', validate(createTransactionValidator), createTransaction);
 router.put('/:id', validate(updateTransactionValidator), updateTransaction);

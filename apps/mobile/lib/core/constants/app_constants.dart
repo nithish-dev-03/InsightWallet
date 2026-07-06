@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 // import 'dart.json' as json;
 
 // Flag to control sample data loading
-const bool isLoadSampleData = true;
+const bool isLoadSampleData = false;
 
 // Sample data asset paths
 class SampleDataPaths {

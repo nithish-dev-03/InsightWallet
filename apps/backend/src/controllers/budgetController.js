@@ -21,7 +21,7 @@ export const getBudget = async (req, res, next) => {
 
 export const createBudget = async (req, res, next) => {
   try {
-    const budget = await budgetService.createBudget(req.userId, req.body);
+    const budget = await budgetService.createBudget(req.userId, req.userEmail, req.body);
     return successResponse(res, budget, 'Budget created.', 201);
   } catch (error) {
     next(error);
@@ -30,7 +30,7 @@ export const createBudget = async (req, res, next) => {
 
 export const updateBudget = async (req, res, next) => {
   try {
-    const budget = await budgetService.updateBudget(req.params.id, req.userId, req.body);
+    const budget = await budgetService.updateBudget(req.params.id, req.userId, req.userEmail, req.body);
     return successResponse(res, budget, 'Budget updated.');
   } catch (error) {
     next(error);

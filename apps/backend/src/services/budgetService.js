@@ -24,13 +24,13 @@ class BudgetService {
     return budget;
   }
 
-  async createBudget(userId, data) {
+  async createBudget(userId, userEmail, data) {
     const budget = await budgetRepository.create({ ...data, user: userId });
-    await this.recalculateSpent(userId, budget.startDate, budget);
+    await this.recalculateSpent(userEmail, userId, budget.startDate, budget);
     return budget;
   }
 
-  async updateBudget(budgetId, userId, data) {
+  async updateBudget(budgetId, userId, userEmail, data) {
     const budget = await budgetRepository.findOne({ _id: budgetId, user: userId });
     if (!budget) {
       const error = new Error('Budget not found.');
@@ -38,7 +38,7 @@ class BudgetService {
       throw error;
     }
     const updated = await budgetRepository.update(budgetId, data);
-    await this.recalculateSpent(userId, updated.startDate, updated);
+    await this.recalculateSpent(userEmail, userId, updated.startDate, updated);
     return updated;
   }
 
@@ -52,35 +52,32 @@ class BudgetService {
     await budgetRepository.delete(budgetId);
   }
 
-  async recalculateSpent(userId, date, budgetOverride = null) {
+  /**
+   * @param {string} userEmail  – key for the transaction doc
+   * @param {string} userId     – ObjectId, for querying budgets
+   * @param {Date}   date
+   * @param {object|null} budgetOverride
+   */
+  async recalculateSpent(userEmail, userId, date, budgetOverride = null) {
     if (budgetOverride) {
-      await this._recalcSingleBudget(userId, budgetOverride);
+      await this._recalcSingleBudget(userEmail, budgetOverride);
       return;
     }
 
     const budgets = await budgetRepository.findActiveBudgets(userId, date);
     for (const budget of budgets) {
-      await this._recalcSingleBudget(userId, budget);
+      await this._recalcSingleBudget(userEmail, budget);
     }
   }
 
-  async _recalcSingleBudget(userId, budget) {
-    const matchFilter = {
-      user: userId,
-      type: 'expense',
-      date: { $gte: budget.startDate, $lte: budget.endDate },
-    };
-
-    if (budget.category) {
-      matchFilter.category = budget.category;
-    }
-
-    const results = await transactionRepository.aggregate([
-      { $match: matchFilter },
-      { $group: { _id: null, total: { $sum: '$amount' } } },
-    ]);
-
-    const spent = results.length > 0 ? results[0].total : 0;
+  async _recalcSingleBudget(userEmail, budget) {
+    const categoryId = budget.category ? budget.category.toString() : null;
+    const spent = await transactionRepository.sumExpenses(
+      userEmail,
+      budget.startDate,
+      budget.endDate,
+      categoryId
+    );
     await budgetRepository.update(budget._id, { spent });
   }
 

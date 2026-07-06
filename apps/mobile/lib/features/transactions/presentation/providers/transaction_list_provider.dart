@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/services/sample_data_service.dart';
 import '../../../../core/services/api_service.dart';
 import '../../../../core/services/storage_service.dart';
@@ -74,11 +75,9 @@ class TransactionListNotifier extends AsyncNotifier<List<TransactionEntity>> {
         sortOrder: _filter.sortOrder,
         search: _filter.search,
       );
-      if (transactions.isNotEmpty) {
-        return transactions;
-      }
-      throw Exception('Transactions empty');
+      return transactions;
     } catch (e) {
+      if (!isLoadSampleData) rethrow;
       _hasMore = false;
       return _loadSampleTransactions();
     }

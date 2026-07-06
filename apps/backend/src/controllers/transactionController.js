@@ -3,7 +3,11 @@ import { successResponse, paginatedResponse } from '../utils/apiResponse.js';
 
 export const getTransactions = async (req, res, next) => {
   try {
-    const result = await transactionService.getTransactions(req.userId, req.query);
+    const result = await transactionService.getTransactions(
+      req.userEmail,
+      req.userId,
+      req.query
+    );
     return paginatedResponse(res, result.data, result.total, result.page, result.limit);
   } catch (error) {
     next(error);
@@ -12,7 +16,7 @@ export const getTransactions = async (req, res, next) => {
 
 export const getTransaction = async (req, res, next) => {
   try {
-    const transaction = await transactionService.getTransaction(req.params.id, req.userId);
+    const transaction = await transactionService.getTransaction(req.params.id, req.userEmail);
     return successResponse(res, transaction);
   } catch (error) {
     next(error);
@@ -21,7 +25,11 @@ export const getTransaction = async (req, res, next) => {
 
 export const createTransaction = async (req, res, next) => {
   try {
-    const transaction = await transactionService.createTransaction(req.userId, req.body);
+    const transaction = await transactionService.createTransaction(
+      req.userEmail,
+      req.userId,
+      req.body
+    );
     return successResponse(res, transaction, 'Transaction created.', 201);
   } catch (error) {
     next(error);
@@ -32,6 +40,7 @@ export const updateTransaction = async (req, res, next) => {
   try {
     const transaction = await transactionService.updateTransaction(
       req.params.id,
+      req.userEmail,
       req.userId,
       req.body
     );
@@ -43,8 +52,29 @@ export const updateTransaction = async (req, res, next) => {
 
 export const deleteTransaction = async (req, res, next) => {
   try {
-    await transactionService.deleteTransaction(req.params.id, req.userId);
+    await transactionService.deleteTransaction(req.params.id, req.userEmail, req.userId);
     return successResponse(res, null, 'Transaction deleted.');
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createBulkTransactions = async (req, res, next) => {
+  try {
+    const { transactions } = req.body;
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'transactions array is required.',
+      });
+    }
+
+    const created = await transactionService.createBulkTransactions(
+      req.userEmail,
+      req.userId,
+      transactions
+    );
+    return successResponse(res, created, 'Transactions bulk created.', 201);
   } catch (error) {
     next(error);
   }
@@ -58,7 +88,7 @@ export const getSummary = async (req, res, next) => {
       error.statusCode = 400;
       throw error;
     }
-    const summary = await transactionService.getSummary(req.userId, startDate, endDate);
+    const summary = await transactionService.getSummary(req.userEmail, startDate, endDate);
     return successResponse(res, summary);
   } catch (error) {
     next(error);
